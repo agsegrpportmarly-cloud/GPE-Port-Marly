@@ -1,0 +1,30 @@
+async function render() {
+  const isAuth = await auth0Client.isAuthenticated();
+
+  if (!isAuth) {
+    show($("#guest"));
+    show($("#btn-login"));
+    hide($("#btn-logout"));
+    hide($("#app"));
+    return;
+  }
+
+  const user = await auth0Client.getUser();
+  $("#welcome").textContent = `Bienvenue, ${user?.name || user?.email || "utilisateur"} !`;
+  hide($("#guest"));
+  hide($("#btn-login"));
+  show($("#btn-logout"));
+  show($("#app"));
+}
+
+
+
+
+async function render() {
+  // MODE TEST : affiche comme si l’utilisateur était connecté
+  $("#welcome").textContent = `Bienvenue, Utilisateur TEST !`;
+  hide($("#guest"));
+  hide($("#btn-login"));
+  show($("#btn-logout"));
+  show($("#app"));
+}

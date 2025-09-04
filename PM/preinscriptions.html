@@ -1,0 +1,318 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>Pré-inscription – Groupe Scouts d’Europe Port-Marly</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet" />
+  <link href="Style.css" rel="stylesheet">
+  <style>
+    :root{--bleu:#005C84;--bleu2:#043956;--fond:#0b2940;--gris:#eef2f4;--blanc:#fff;--radius:18px;--shadow:0 14px 40px rgba(0,0,0,.22);--maxw:1200px;--gap:18px}
+    *{box-sizing:border-box}
+    html,body{margin:0;font-family:"Libre Baskerville",serif;background:var(--fond);color:#f6f9fc}
+    header img{width:100%;height:auto;display:block}
+    .wrap{max-width:var(--maxw);margin:24px auto;padding:0 24px}
+    .card{background:linear-gradient(180deg,#f3f7fa 0%, #e9f1f6 100%);color:#0f2332;border-radius:var(--radius);box-shadow:var(--shadow);padding:28px}
+    h1{margin:0 0 10px;font-size:28px}.muted{opacity:.85;margin-top:0}
+    .progress{height:10px;background:#cfe0ea;border-radius:999px;overflow:hidden;margin:10px 0 22px}
+    .bar{height:100%;background:var(--bleu);width:100%}
+    form{display:block}
+    .grid{display:grid;grid-template-columns:repeat(12,1fr);gap:var(--gap);align-items:start}
+    .col-12{grid-column:span 12}.col-8{grid-column:span 8}.col-6{grid-column:span 6}.col-4{grid-column:span 4}
+    @media (max-width:1024px){.col-8,.col-6,.col-4{grid-column:span 12}}
+    label{display:block;font-weight:700;margin:6px 0}
+    input,select,textarea{width:100%;padding:14px;border-radius:14px;border:1px solid #c8d6e1;background:#fff;color:#0f2332;font-size:16px}
+    textarea{min-height:96px;resize:vertical}
+    fieldset{border:1px solid #d6e2ea;border-radius:14px;padding:14px;background:#fff;margin:0 0 18px}
+    legend{font-weight:700;color:#0f2332}
+    .row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
+    .btn{display:inline-block;padding:14px 20px;border-radius:14px;background:var(--bleu);color:var(--blanc);font-weight:700;border:0;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.18);transition:.18s}
+    .btn:hover{transform:translateY(-1px)} .btn:disabled{opacity:.6;cursor:not-allowed}
+    .success{padding:14px 16px;border-radius:12px;background:#e8f7ee;color:#155724;border:1px solid #c3e6cb;margin-top:12px}
+    .error{padding:14px 16px;border-radius:12px;background:#fdecea;color:#611a15;border:1px solid #f5c6cb;margin-top:12px}
+    .actions{display:flex;justify-content:center;margin-top:20px}
+    /* multiselect "tags" */
+    .multiselect{max-width:100%;position:relative;font-size:16px}
+    .multiselect .tags{display:flex;flex-wrap:wrap;gap:6px;padding:8px 10px;border:1px solid #ccc;border-radius:8px;background:#fff;cursor:text;min-height:42px}
+    .multiselect .tag{background:#005C84;color:#fff;padding:4px 8px;border-radius:6px;display:flex;align-items:center;gap:4px;font-size:14px}
+    .multiselect .tag span{cursor:pointer;font-weight:bold}
+    .multiselect input{border:none;flex:1;min-width:100px;font-size:16px;outline:none}
+    .options{position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #ccc;border-radius:8px;margin-top:4px;max-height:200px;overflow-y:auto;display:none;z-index:10}
+    .options div{padding:8px 12px;cursor:pointer}
+    .options div:hover{background:#005C84;color:#fff}
+    .show{display:block}
+  </style>
+</head>
+<body>
+  <header class="hero">
+    <br>
+    <br>
+    <br>
+    <br>    
+    <br>
+    <br>    
+    <br>
+<nav>
+  <a href="/Index.html">Accueil</a>
+  <a href="/Activites.html">Activités</a>
+  <a href="/adherents/index.html">Espace adhérents</a>
+  <a href="/preinscriptions.html">Pré-Inscriptions</a>
+</nav>
+  </header>
+
+  <div class="wrap">
+    <div class="card">
+      <h1>Pré-inscription</h1>
+      <p class="muted">Merci de remplir ce formulaire. Un message de confirmation s’affichera après l’envoi.</p>
+
+      <div class="progress"><div class="bar"></div></div>
+
+      <!-- ========= Formulaire -> Apps Script via iframe (pas de CORS) ========= -->
+      <form id="form"
+            method="POST"
+            action="https://script.google.com/macros/s/AKfycbyUVye_K8IPcGIe5rqZgJ29I5x5GNdY2wArA49KbuxB52ZfkiSQY0eLQDNrF-r1W8SF/exec"
+            target="hidden_iframe"
+            onsubmit="return handleSubmit(event)"
+            novalidate>
+
+        <!-- Honeypot anti-spam -->
+        <div style="position:absolute;left:-5000px;opacity:0;height:0;width:0;overflow:hidden">
+          <label>Votre site web</label><input type="text" name="website" autocomplete="off">
+        </div>
+
+        <!-- Demandeur -->
+        <fieldset>
+          <legend>Demandeur</legend>
+          <div class="grid">
+            <div class="col-6">
+              <label for="Dnom">Nom / prénom *</label>
+              <input id="Dnom" name="Dnom" placeholder="Nom - Prénom" required>
+            </div>
+            <div class="col-6">
+              <label for="tel">Téléphone *</label>
+              <input id="tel" name="tel" type="tel" placeholder="06 12 34 56 78" pattern="[0-9 +().-]{6,}" required>
+            </div>
+            <div class="col-6">
+              <label for="email">Adresse e-mail *</label>
+              <input id="email" name="email" type="email" placeholder="nom@exemple.com" required>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- Enfant -->
+        <fieldset>
+          <legend>Informations sur l'enfant</legend>
+          <div class="grid">
+            <div class="col-4">
+              <label for="rentree">Rentrée *</label>
+              <select id="rentree" name="rentree" required>
+                <option value="" disabled selected>— Sélectionner —</option>
+                <option>septembre 2025</option>
+                <option>septembre 2026</option>
+                <option>septembre 2027</option>
+                <option>septembre 2028</option>
+              </select>
+            </div>
+            <div class="col-4">
+              <label for="nom">Nom de l’enfant *</label>
+              <input id="nom" name="nom" required>
+            </div>
+            <div class="col-4">
+              <label for="prenom">Prénom de l’enfant *</label>
+              <input id="prenom" name="prenom" required>
+            </div>
+            <div class="col-4">
+              <label for="naissance">Date de naissance (jj/mm/aaaa) *</label>
+              <input id="naissance" name="naissance" type="date" inputmode="numeric" placeholder="jj/mm/aaaa" required>
+            </div>
+            <div class="col-8">
+              <label for="type_unite">Type d’unité *</label>
+              <select id="type_unite" name="type_unite" required>
+                <option value="" disabled selected>— Sélectionner —</option>
+                <option>Clairière (Filles 8-11 ans)</option>
+                <option>Meute (Garçons 8-11 ans)</option>
+                <option>Compagnie (Filles 12-17 ans)</option>
+                <option>Troupe (Garçons 12-17 ans)</option>
+                <option>Feu (Filles à partir de 17 ans)</option>
+                <option>Clan (Garçons à partir de 17 ans)</option>
+              </select>
+            </div>
+          </div>
+        </fieldset>
+
+        <!-- Famille -->
+        <fieldset>
+          <legend>Informations sur la famille</legend>
+
+          <!-- Multiselect + hidden pour soumission -->
+          <label>Autres enfants déjà inscrits à Port-Marly</label>
+          <div class="multiselect" id="multi1">
+            <div class="tags" onclick="focusInput(this)">
+              <!-- Tags choisis apparaissent ici -->
+              <input type="text" placeholder="Sélectionner…" onfocus="showOptions(this)" onkeyup="filterOptions(this)">
+            </div>
+            <div class="options">
+              <div data-value="Clairiere 2ème Port Marly">Clairiere 2ème Port Marly</div>
+              <div data-value="Clairière 4ème Port Marly">Clairière 4ème Port Marly</div>
+              <div data-value="Meute 1ère Port Maly">Meute 1ère Port Maly</div>
+              <div data-value="Meute 3ème Port Maly">Meute 3ème Port Maly</div>
+              <div data-value="Compagnie 2ème Port Marly">Compagnie 2ème Port Marly</div>
+              <div data-value="Compagnie 4ème Port Marly">Compagnie 4ème Port Marly</div>
+              <div data-value="Troupe 1ère Port Marly">Troupe 1ère Port Marly</div>
+              <div data-value="Troupe 3ème Port Marly">Troupe 3ème Port Marly</div>
+              <div data-value="Feu Notre Dame de Joie">Feu Notre Dame de Joie</div>
+              <div data-value="Clan Saint Georges">Clan Saint Georges</div>
+            </div>
+          </div>
+          <!-- champ réellement posté au serveur -->
+          <input type="hidden" id="autres_enfants_hidden" name="autres_enfants_hidden" value="">
+
+          <!-- Paroisse (sélecteur + champ autre à droite) -->
+          <div class="grid" style="align-items:end">
+            <div class="col-6">
+              <label for="paroisse_select">Paroisse habituelle *</label>
+              <!-- NOTE : on n'envoie pas ce <select> (pas de name) ; on envoie la valeur finale dans l'input hidden ci-dessous -->
+              <select id="paroisse_select" required>
+                <option value="" disabled selected>— Sélectionner —</option>
+                <option>Saint Louis - Port Marly</option>
+                <option>Les Franciscaines - St Germain en Laye</option>
+                <option value="__autre__">Autre…</option>
+              </select>
+            </div>
+            <div class="col-6" id="paroisse_autre_zone" hidden>
+              <label for="paroisse_autre">Précisez</label>
+              <input type="text" id="paroisse_autre" placeholder="Nom de votre paroisse">
+            </div>
+          </div>
+          <!-- champ réellement posté au serveur -->
+          <input type="hidden" id="paroisse_value" name="paroisse_value" value="">
+        </fieldset>
+
+        <!-- Autres infos -->
+        <fieldset>
+          <legend>Autres informations</legend>
+          <label for="comment">Commentaires / remarques / motivations</label>
+          <textarea id="comment" name="comment" rows="3" placeholder="Facultatif"></textarea>
+        </fieldset>
+
+        <div class="actions">
+          <button type="submit" class="btn" id="submitBtn">Envoyer</button>
+        </div>
+        <div id="msg" style="display:none"></div>
+      </form>
+
+      <!-- iframe cachée pour capter la fin d’envoi -->
+      <iframe name="hidden_iframe" id="hidden_iframe" style="display:none"></iframe>
+
+    </div>
+    <footer>© AGSE – Groupes de Port-Marly • Semper Parati</footer>
+  </div>
+
+  <!-- ====== JS ====== -->
+  <script>
+    // Paroisse: gérer "Autre…" et remplir le champ réellement posté
+    (function(){
+      const sel  = document.getElementById('paroisse_select');
+      const zone = document.getElementById('paroisse_autre_zone');
+      const autre= document.getElementById('paroisse_autre');
+      const out  = document.getElementById('paroisse_value');
+
+      function sync(){
+        const isAutre = sel.value === '__autre__';
+        zone.hidden = !isAutre;
+        autre.required = isAutre;
+        out.value = isAutre ? (autre.value || '') : (sel.value || '');
+      }
+      sel.addEventListener('change', sync);
+      autre.addEventListener('input', sync);
+      sync();
+    })();
+  </script>
+
+  <script>
+    // Multi-select "tags" -> remplit le hidden "Autres enfants déjà inscrits à Port Marly" (valeurs séparées par ", ")
+    (function(){
+      const multi = document.getElementById('multi1');
+      const hidden = document.getElementById('autres_enfants_hidden');
+
+      function updateHidden(){
+        const values = Array.from(multi.querySelectorAll('.tag')).map(t => t.dataset.tag);
+        hidden.value = values.join(', ');
+      }
+      window.focusInput = function(tagsDiv){ tagsDiv.querySelector("input").focus(); }
+      window.showOptions = function(input){ input.closest(".multiselect").querySelector(".options").classList.add("show"); }
+      window.filterOptions = function(input){
+        const f = input.value.toLowerCase();
+        input.closest(".multiselect").querySelectorAll(".options div").forEach(opt=>{
+          opt.style.display = opt.textContent.toLowerCase().includes(f) ? "block" : "none";
+        });
+      }
+      multi.querySelectorAll(".options div").forEach(opt=>{
+        opt.addEventListener("click", function(){
+          const value = this.getAttribute("data-value");
+          const label = this.textContent;
+          if(multi.querySelector(`[data-tag="${value}"]`)) return;
+          const tag = document.createElement("div");
+          tag.className="tag"; tag.setAttribute("data-tag", value);
+          tag.innerHTML = label + ' <span onclick="removeTag(this)">&times;</span>';
+          multi.querySelector(".tags").insertBefore(tag, multi.querySelector(".tags input"));
+          multi.querySelector(".options").classList.remove("show");
+          multi.querySelector(".tags input").value="";
+          updateHidden();
+        });
+      });
+      window.removeTag = function(span){ span.parentElement.remove(); updateHidden(); }
+      document.addEventListener("click", e=>{
+        document.querySelectorAll(".multiselect .options").forEach(opt=>{
+          if(!opt.closest(".multiselect").contains(e.target)){ opt.classList.remove("show"); }
+        });
+      });
+    })();
+  </script>
+
+  <script>
+    // Soumission via iframe cachée + message de succès
+    function handleSubmit(e){
+      const form = e.target;
+      const msg  = document.getElementById('msg');
+      const btn  = document.getElementById('submitBtn');
+
+      // vérifs simples
+      if(!form.checkValidity()){
+        e.preventDefault();
+        form.reportValidity();
+        return false;
+      }
+
+      // mettre à jour la valeur "Paroisse habituelle" avant envoi (si l'utilisateur n'a pas modifié après)
+      (function syncParoisse(){
+        const sel  = document.getElementById('paroisse_select');
+        const autre= document.getElementById('paroisse_autre');
+        const out  = document.getElementById('paroisse_value');
+        out.value = (sel.value === '__autre__') ? (autre.value || '') : (sel.value || '');
+      })();
+
+      // UI
+      btn?.setAttribute('disabled','disabled');
+      msg.style.display='none';
+
+      // callback de fin (l’iframe se charge quand le POST est terminé côté Apps Script)
+      document.getElementById('hidden_iframe').onload = function(){
+        btn?.removeAttribute('disabled');
+        msg.className='success';
+        msg.textContent='✅ Votre demande a bien été enregistrée. Nous vous recontacterons rapidement.';
+        msg.style.display='block';
+        form.reset();
+
+        // Re-synchroniser les champs "virtuels"
+        document.getElementById('autres_enfants_hidden').value='';
+        document.getElementById('paroisse_value').value='';
+        const tags = document.querySelectorAll('#multi1 .tag'); tags.forEach(t=>t.remove());
+        const paroisseZone = document.getElementById('paroisse_autre_zone'); paroisseZone.hidden = true;
+      };
+
+      return true; // laisser partir le POST vers l’URL /exec
+    }
+  </script>
+</body>
+</html>
