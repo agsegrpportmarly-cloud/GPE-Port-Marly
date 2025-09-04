@@ -1,0 +1,156 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <title>Espace adhérents – Port-Marly</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <!-- CSS à la racine -->
+  <link rel="stylesheet" href="/Style.css">
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Firebase (tu peux retirer si plus nécessaire) -->
+  <script defer src="https://www.gstatic.com/firebasejs/10.12.3/firebase-app-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.12.3/firebase-auth-compat.js"></script>
+
+  <!-- Auth0 SPA SDK -->
+  <script src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js" defer></script>
+
+  <style>
+    .container{max-width:1100px;margin:0 auto;padding:24px}
+    .btn{padding:.6rem 1rem;border:1px solid #ccc;border-radius:.6rem;background:#fff;cursor:pointer}
+    .btn.primary{border-color:#005c84;background:#005c84;color:#fff}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:2rem}
+    .card{border:1px solid #e5e7eb;border-radius:16px;padding:18px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+    .muted{color:#6b7280}
+    .hide{display:none}
+    nav a{margin-right:1rem}
+  </style>
+</head>
+<body>
+  <!-- Ton header existant -->
+  <header class="hero">
+    <br><br><br><br><br><br><br>
+    <nav>
+      <a href="/Index.html">Accueil</a>
+      <a href="/Activites.html">Activités</a>
+      <a href="/adherents/index.html">Espace adhérents</a>
+      <a href="/preinscriptions.html">Pré-Inscriptions</a>
+    </nav>
+  </header>
+
+  <main class="container">
+    <div style="text-align:right; margin-bottom:1rem;">
+      <button id="btn-login" class="btn primary">Se connecter</button>
+      <button id="btn-logout" class="btn hide">Se déconnecter</button>
+    </div>
+
+    <!-- État : non connecté -->
+    <section id="guest">
+      <p class="muted">Connectez-vous pour accéder aux sections.</p>
+    </section>
+
+    <!-- État : connecté -->
+    <section id="app" class="hide">
+      <p class="muted" id="welcome"></p>
+      <div class="grid">
+        <a class="card" href="/adherents/clairiere 2PM/index.html">
+          <h3>Meute 1ère <br>Port Marly</h3>
+          <p>Créer / modifier un dossier d’adhésion.</p>
+        </a>
+        <a class="card" href="/adherents/chefs.html">
+          <h3>Chefs & Responsables</h3>
+          <p>Formulaire et documents pour les chefs.</p>
+        </a>
+        <a class="card" href="/adherents/dossiers.html">
+          <h3>Dossiers</h3>
+          <p>Consulter les PDF générés et pièces jointes.</p>
+        </a>
+        <a class="card" href="/adherents/parametres.html">
+          <h3>Paramètres</h3>
+          <p>Informations du compte et préférences.</p>
+        </a>
+      </div>
+            <div class="grid">
+        <a class="card" href="/adherents/clairiere 2PM/index.html">
+          <h3>Meute 3ème <br>Port Marly</h3>
+          <p>Créer / modifier un dossier d’adhésion.</p>
+        </a>
+        <a class="card" href="/adherents/chefs.html">
+          <h3>Chefs & Responsables</h3>
+          <p>Formulaire et documents pour les chefs.</p>
+        </a>
+        <a class="card" href="/adherents/dossiers.html">
+          <h3>Dossiers</h3>
+          <p>Consulter les PDF générés et pièces jointes.</p>
+        </a>
+        <a class="card" href="/adherents/parametres.html">
+          <h3>Paramètres</h3>
+          <p>Informations du compte et préférences.</p>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    // ---------- CONFIG AUTH0 (tes valeurs) ----------
+    const AUTH0_DOMAIN   = "dev-zl3rulx7tauw5f4h.us.auth0.com";
+    const AUTH0_CLIENTID = "etdVdsWZQSoyQtrNdUKDRxytmXM4cZFL";
+    // ------------------------------------------------
+
+    let auth0Client;
+    const $ = (s, r=document) => r.querySelector(s);
+    const show = (el) => el.classList.remove('hide');
+    const hide = (el) => el.classList.add('hide');
+
+    async function initAuth0() {
+      auth0Client = await auth0.createAuth0Client({
+        domain: AUTH0_DOMAIN,
+        clientId: AUTH0_CLIENTID,
+        authorizationParams: {
+          redirect_uri: window.location.origin + "/adherents/",
+        },
+        cacheLocation: "localstorage",
+        useRefreshTokens: true
+      });
+
+      // Callback Auth0 (retour redirection)
+      const q = window.location.search;
+      if (q.includes("code=") && q.includes("state=")) {
+        await auth0Client.handleRedirectCallback();
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+
+      bindUI();
+      await render();
+    }
+
+    function bindUI() {
+      $("#btn-login")?.addEventListener("click", () => auth0Client.loginWithRedirect());
+      $("#btn-logout")?.addEventListener("click", () =>
+        auth0Client.logout({ logoutParams: { returnTo: window.location.origin + "/adherents/" } })
+      );
+    }
+
+async function render() {
+  const isAuth = await auth0Client.isAuthenticated();
+
+  if (!isAuth) {
+    show($("#guest"));
+    show($("#btn-login"));
+    hide($("#btn-logout"));
+    hide($("#app"));
+    return;
+  }
+
+  const user = await auth0Client.getUser();
+  $("#welcome").textContent = `Bienvenue, ${user?.name || user?.email || "utilisateur"} !`;
+  hide($("#guest"));
+  hide($("#btn-login"));
+  show($("#btn-logout"));
+  show($("#app"));
+}
+
+    window.addEventListener("DOMContentLoaded", initAuth0);
+  </script>
+</body>
+</html>
