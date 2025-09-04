@@ -1,54 +1,114 @@
-import { jwtVerify, createRemoteJWKSet } from 'jose';
+// Edge Function (Deno) without external deps: verify Auth0 ID token using WebCrypto
+// - Reads ID token from cookie (SESSION_COOKIE_NAME or 'pm_session')
+// - Verifies RS256 signature against Auth0 JWKS
+// - Checks roles in custom claim 'https://pmarly/roles'
 
 const COOKIE = Deno.env.get('SESSION_COOKIE_NAME') || 'pm_session';
-const DOMAIN = Deno.env.get('AUTH0_DOMAIN');
-const JWKS = createRemoteJWKSet(new URL(`https://${DOMAIN}/.well-known/jwks.json`));
+const DOMAIN = Deno.env.get('AUTH0_DOMAIN'); // e.g. "dev-xxx.auth0.com"
+const ISSUER = `https://${DOMAIN}/`;
 
-// Chemin -> rôle requis
+// Route -> required role
 const RULES = [
   { prefix: '/adherents/clairiere 2PM/', role: 'C2PM' },
   { prefix: '/adherents/clairiere 4PM/', role: 'C4PM' },
   { prefix: '/adherents/meute 1PM/',     role: 'M1PM' },
   { prefix: '/adherents/compagnie 2PM/', role: 'CI2PM' },
-  { prefix: '/adherents/troupe 1PM/',    role: 'T1PM' },
+  { prefix: '/adherents/troupe 1 PM/',   role: 'T1PM' },
   { prefix: '/adherents/meute 3PM/',     role: 'M3PM' },
   { prefix: '/adherents/compagnie 4PM/', role: 'CI4PM' },
-  { prefix: '/adherents/troupe 3PM/',    role: 'T3PM' },  
-  { prefix: '/adherents/feu/',       role: 'FDNJ' },
-  { prefix: '/adherents/clan/',      role: 'CSG' },
+  { prefix: '/adherents/troupe 3 PM/',   role: 'T3PM' },
+  { prefix: '/adherents/feu/',           role: 'FDNJ' },
+  { prefix: '/adherents/clan/',          role: 'CSG' },
 ];
+
+// Simple in-memory cache for JWKS
+let JWKS_CACHE = null;
+let JWKS_TIME = 0;
+
+async function getJWKS() {
+  const now = Date.now();
+  if (JWKS_CACHE && (now - JWKS_TIME) < 5 * 60 * 1000) return JWKS_CACHE; // 5 min
+  const res = await fetch(`https://${DOMAIN}/.well-known/jwks.json`);
+  if (!res.ok) throw new Error('Failed to fetch JWKS');
+  JWKS_CACHE = await res.json();
+  JWKS_TIME = now;
+  return JWKS_CACHE;
+}
+
+function b64urlToUint8(b64url) {
+  // base64url decode
+  const pad = '='.repeat((4 - (b64url.length % 4)) % 4);
+  const base64 = b64url.replace(/-/g, '+').replace(/_/g, '/') + pad;
+  const binary = atob(base64);
+  const bytes = new Uint8Array(binary.length);
+  for (let i = 0; i < binary.length; i++) bytes[i] = binary.charCodeAt(i);
+  return bytes;
+}
+
+async function importJwk(jwk) {
+  // RS256
+  return crypto.subtle.importKey(
+    'jwk',
+    jwk,
+    { name: 'RSASSA-PKCS1-v1_5', hash: 'SHA-256' },
+    true,
+    ['verify']
+  );
+}
+
+async function verifyJWT(token) {
+  const parts = token.split('.');
+  if (parts.length !== 3) throw new Error('Bad token');
+  const [h, p, s] = parts;
+
+  const header = JSON.parse(new TextDecoder().decode(b64urlToUint8(h)));
+  const payload = JSON.parse(new TextDecoder().decode(b64urlToUint8(p)));
+  const signature = b64urlToUint8(s);
+
+  if (header.alg !== 'RS256') throw new Error('Unsupported alg');
+  if (payload.iss !== ISSUER) throw new Error('Bad issuer');
+  if (payload.exp && Date.now()/1000 > payload.exp) throw new Error('Expired');
+
+  const jwks = await getJWKS();
+  const jwk = jwks.keys.find(k => k.kid === header.kid && k.kty === 'RSA');
+  if (!jwk) throw new Error('No JWK for kid');
+
+  const key = await importJwk(jwk);
+  const data = new TextEncoder().encode(`${h}.${p}`);
+  const ok = await crypto.subtle.verify({ name: 'RSASSA-PKCS1-v1_5' }, key, signature, data);
+  if (!ok) throw new Error('Bad signature');
+
+  return payload;
+}
+
+function parseCookie(header, name) {
+  if (!header) return null;
+  const m = header.match(new RegExp(`${name}=([^;]+)`));
+  return m ? decodeURIComponent(m[1]) : null;
+}
 
 export default async (request, context) => {
   const url = new URL(request.url);
-  const cookies = request.headers.get('cookie') || '';
-  const token = (cookies.match(new RegExp(`${COOKIE}=([^;]+)`)) || [])[1];
 
-  // Redirection vers /login si pas connecté
   const toLogin = new Response(null, {
     status: 302,
     headers: { Location: `/login?returnTo=${encodeURIComponent(url.pathname)}` }
   });
 
-  if (!token) return toLogin;
-
   try {
-    const { payload } = await jwtVerify(token, JWKS, {
-      issuer: `https://${DOMAIN}/`
-    });
+    const token = parseCookie(request.headers.get('cookie') || '', COOKIE);
+    if (!token) return toLogin;
 
-    // ⚠️ garde exactement ce namespace, identique à ton Action Auth0
+    const payload = await verifyJWT(token);
     const roles = payload['https://pmarly/roles'] || [];
     const isAdmin = roles.includes('admin');
 
-    // Cherche si la route demandée exige un rôle précis
     const rule = RULES.find(r => url.pathname.startsWith(r.prefix));
-    if (!rule) return context.next(); // juste connecté suffit pour /adherents/* sans sous-règle
+    if (!rule) return context.next(); // just being logged-in is enough
 
     if (isAdmin || roles.includes(rule.role)) return context.next();
-
     return new Response('Accès refusé', { status: 401, headers: {'content-type':'text/plain; charset=utf-8'} });
-  } catch {
-    // Token expiré/invalide -> relogin
+  } catch (_e) {
     return toLogin;
   }
 };
