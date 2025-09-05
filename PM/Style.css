@@ -33,7 +33,7 @@ header.hero .overlay{
 .container{max-width:var(--maxw);margin:0 auto;padding:0 16px}
 nav{
   display:flex;gap:16px;flex-wrap:wrap;align-items:center;justify-content:center;
-  padding:12px 0;background:rgba(218, 29, 29, 0.699);backdrop-filter:blur(2px)
+  padding:12px 0;background:rgba(150, 150, 150, 0.459);backdrop-filter:blur(2px)
 }
 nav a{
   padding:10px 14px;border-radius:999px;background:rgba(255,255,255,.12);
