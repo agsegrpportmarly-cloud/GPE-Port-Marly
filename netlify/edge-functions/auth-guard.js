@@ -1,13 +1,8 @@
-// Edge Function (Deno) without external deps: verify Auth0 ID token using WebCrypto
-// - Reads ID token from cookie (SESSION_COOKIE_NAME or 'pm_session')
-// - Verifies RS256 signature against Auth0 JWKS
-// - Checks roles in custom claim 'https://pmarly/roles'
-
+// Edge Function to protect /adherents/* without external dependencies
 const COOKIE = Deno.env.get('SESSION_COOKIE_NAME') || 'pm_session';
-const DOMAIN = Deno.env.get('AUTH0_DOMAIN'); // e.g. "dev-xxx.auth0.com"
+const DOMAIN = Deno.env.get('AUTH0_DOMAIN');
 const ISSUER = `https://${DOMAIN}/`;
 
-// Route -> required role
 const RULES = [
   { prefix: '/adherents/clairiere 2PM/', role: 'C2PM' },
   { prefix: '/adherents/clairiere 4PM/', role: 'C4PM' },
@@ -21,13 +16,12 @@ const RULES = [
   { prefix: '/adherents/clan/',          role: 'CSG' },
 ];
 
-// Simple in-memory cache for JWKS
 let JWKS_CACHE = null;
 let JWKS_TIME = 0;
 
 async function getJWKS() {
   const now = Date.now();
-  if (JWKS_CACHE && (now - JWKS_TIME) < 5 * 60 * 1000) return JWKS_CACHE; // 5 min
+  if (JWKS_CACHE && (now - JWKS_TIME) < 5 * 60 * 1000) return JWKS_CACHE;
   const res = await fetch(`https://${DOMAIN}/.well-known/jwks.json`);
   if (!res.ok) throw new Error('Failed to fetch JWKS');
   JWKS_CACHE = await res.json();
@@ -36,7 +30,6 @@ async function getJWKS() {
 }
 
 function b64urlToUint8(b64url) {
-  // base64url decode
   const pad = '='.repeat((4 - (b64url.length % 4)) % 4);
   const base64 = b64url.replace(/-/g, '+').replace(/_/g, '/') + pad;
   const binary = atob(base64);
@@ -46,7 +39,6 @@ function b64urlToUint8(b64url) {
 }
 
 async function importJwk(jwk) {
-  // RS256
   return crypto.subtle.importKey(
     'jwk',
     jwk,
@@ -89,7 +81,6 @@ function parseCookie(header, name) {
 
 export default async (request, context) => {
   const url = new URL(request.url);
-
   const toLogin = new Response(null, {
     status: 302,
     headers: { Location: `/login?returnTo=${encodeURIComponent(url.pathname)}` }
@@ -104,7 +95,7 @@ export default async (request, context) => {
     const isAdmin = roles.includes('admin');
 
     const rule = RULES.find(r => url.pathname.startsWith(r.prefix));
-    if (!rule) return context.next(); // just being logged-in is enough
+    if (!rule) return context.next(); // logged-in is enough
 
     if (isAdmin || roles.includes(rule.role)) return context.next();
     return new Response('Accès refusé', { status: 401, headers: {'content-type':'text/plain; charset=utf-8'} });

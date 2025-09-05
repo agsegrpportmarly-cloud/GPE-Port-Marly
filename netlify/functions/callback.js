@@ -5,37 +5,46 @@ function cookie(name, value) {
     process.env.SESSION_COOKIE_SECURE === 'false' ? '' : 'Secure',
     'Path=/',
     'SameSite=Lax',
-    `Max-Age=${60*60*24}` // 1 jour
+    `Max-Age=${60*60*24}`
   ].filter(Boolean);
   return parts.join('; ');
 }
 
 exports.handler = async (event) => {
   try {
-    const params = new URLSearchParams(event.rawQuery || '');
-    const code = params.get('code');
-    const state = params.get('state') || '/adherents/';
-    if (!code) throw new Error('Missing code');
+    const url = new URL(event.rawUrl || `https://dummy.local/?${event.rawQuery || ''}`);
+    const code = url.searchParams.get('code');
+    const state = url.searchParams.get('state') || '/adherents/';
+    if (!code) return { statusCode: 400, body: 'Missing authorization code' };
 
-    const res = await fetch(`https://${process.env.AUTH0_DOMAIN}/oauth/token`, {
+    const clean = s => (s || '').trim();
+    const domain = clean(process.env.AUTH0_DOMAIN).replace(/^https?:\/\//, '').replace(/\/+$/, '');
+    const clientId = clean(process.env.AUTH0_CLIENT_ID);
+    const clientSecret = clean(process.env.AUTH0_CLIENT_SECRET);
+    const redirectUri = clean(process.env.AUTH0_REDIRECT_URI);
+    if (!domain || !clientId || !clientSecret || !redirectUri) {
+      return { statusCode: 500, body: 'Missing Auth0 env config' };
+    }
+
+    const tokenRes = await fetch(`https://${domain}/oauth/token`, {
       method: 'POST',
-      headers: {'Content-Type':'application/json'},
+      headers: { 'content-type': 'application/json' },
       body: JSON.stringify({
         grant_type: 'authorization_code',
-        client_id: process.env.AUTH0_CLIENT_ID,
-        client_secret: process.env.AUTH0_CLIENT_SECRET,
+        client_id: clientId,
+        client_secret: clientSecret,
         code,
-        redirect_uri: process.env.AUTH0_REDIRECT_URI
+        redirect_uri: redirectUri
       })
     });
-    const json = await res.json();
-    if (!res.ok) throw new Error(JSON.stringify(json));
+    const tokenJson = await tokenRes.json();
+    if (!tokenRes.ok) return { statusCode: tokenRes.status, body: `Token error: ${JSON.stringify(tokenJson)}` };
 
-    const idToken = json.id_token;
-    if (!idToken) throw new Error('No id_token');
+    const idToken = tokenJson.id_token;
+    if (!idToken) return { statusCode: 500, body: 'No id_token in response' };
 
-    const setCookie = cookie(process.env.SESSION_COOKIE_NAME || 'pm_session', idToken);
-
+    const cookieName = process.env.SESSION_COOKIE_NAME || 'pm_session';
+    const setCookie = cookie(cookieName, idToken);
     return { statusCode: 302, headers: { 'Set-Cookie': setCookie, Location: state } };
   } catch (e) {
     return { statusCode: 500, body: `Auth callback error: ${e.message}` };

@@ -1,10 +1,5 @@
-# netlify.toml (repo root) — version sans bloc [edge_functions] pour éviter le conflit
 [build]
   publish = "PM"
-
-# On utilise les répertoires par défaut:
-# - Functions: netlify/functions
-# - Edge Functions: netlify/edge-functions
 
 [[edge_functions]]
   function = "auth-guard"
@@ -18,4 +13,9 @@
 [[redirects]]
   from = "/callback"
   to   = "/.netlify/functions/callback"
+  status = 200
+
+[[redirects]]
+  from = "/logout"
+  to   = "/.netlify/functions/logout"
   status = 200
