@@ -1,12 +1,23 @@
-// --- ROUTAGE INLINE (Netlify lit ça même si le netlify.toml est ignoré)
 export const config = {
   path: ["/adherents", "/adherents/", "/adherents/index.html", "/adherents/*"]
 };
 
-// --- GUARDE (sans dépendances externes) ---
 const COOKIE = Deno.env.get('SESSION_COOKIE_NAME') || 'pm_session';
 const DOMAIN = Deno.env.get('AUTH0_DOMAIN');
 const ISSUER = `https://${DOMAIN}/`;
+
+const RULES = [
+  { prefix: "/adherents/clairiere 2PM/", role: "C2PM" },
+  { prefix: "/adherents/clairiere 4PM/", role: "C4PM" },
+  { prefix: "/adherents/meute 1PM/",     role: "M1PM" },
+  { prefix: "/adherents/meute 3PM/",     role: "M3PM" },
+  { prefix: "/adherents/compagnie 2PM/", role: "CI2PM" },
+  { prefix: "/adherents/compagnie 4PM/", role: "CI4PM" },
+  { prefix: "/adherents/troupe 1 PM/",   role: "T1PM" },
+  { prefix: "/adherents/troupe 3 PM/",   role: "T3PM" },
+  { prefix: "/adherents/feu/",           role: "FDNJ" },
+  { prefix: "/adherents/clan/",          role: "CSG" },
+];
 
 let JWKS_CACHE = null, JWKS_TIME = 0;
 async function getJWKS() {
@@ -46,11 +57,15 @@ function readCookie(header, name) {
   const m = header.match(new RegExp(`${name}=([^;]+)`));
   return m ? decodeURIComponent(m[1]) : null;
 }
+function getRoles(payload) {
+  for (const k of ["https://pmarly/roles", "https://portmarly/roles", "roles"]) {
+    const v = payload?.[k];
+    if (Array.isArray(v)) return v;
+  }
+  return [];
+}
 
 export default async (request, context) => {
-  // log visible dans "Deploys → Edge Functions log"
-  console.log("auth-guard hit", request.url);
-
   const url = new URL(request.url);
   const requireLogin = new Response(null, {
     status: 302,
@@ -60,8 +75,20 @@ export default async (request, context) => {
   try {
     const token = readCookie(request.headers.get('cookie') || '', COOKIE);
     if (!token) return requireLogin;
-    await verifyJWT(token);
-    return context.next(); // ok, on laisse passer
+
+    const payload = await verifyJWT(token);
+    const roles   = getRoles(payload);
+    const isAdmin = roles.includes("admin");
+
+    const rule = RULES.find(r => url.pathname.startsWith(r.prefix));
+    if (!rule) return context.next(); // juste connecté suffit
+
+    if (isAdmin || roles.includes(rule.role)) return context.next();
+
+    return new Response("Accès refusé (rôle manquant)", {
+      status: 401,
+      headers: { "content-type": "text/plain; charset=utf-8" }
+    });
   } catch {
     return requireLogin;
   }
