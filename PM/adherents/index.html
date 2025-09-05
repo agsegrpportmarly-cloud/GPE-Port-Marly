@@ -2,28 +2,38 @@
 <html lang="fr">
 <head>
   <meta charset="utf-8">
-  <title>Scouts d’Europe – Port-Marly</title>
+  <title>Espace adhérents – Port-Marly</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
-<link href="/PM/Style.css" rel="stylesheet">
-
+  <!-- CSS à la racine -->
+  <link rel="stylesheet" href="/Style.css">
   <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- Firebase (tu peux retirer si plus nécessaire) -->
+  <script defer src="https://www.gstatic.com/firebasejs/10.12.3/firebase-app-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.12.3/firebase-auth-compat.js"></script>
+
+  <!-- Auth0 SPA SDK -->
+  <style>
+    .container{max-width:1100px;margin:0 auto;padding:24px}
+    .btn{padding:.6rem 1rem;border:1px solid #ccc;border-radius:.6rem;background:#fff;cursor:pointer}
+    .btn.primary{border-color:#005c84;background:#005c84;color:#fff}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:2rem}
+    .card{border:1px solid #e5e7eb;border-radius:16px;padding:18px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+    .muted{color:#6b7280}
+    .hide{display:none}
+    nav a{margin-right:1rem}
+  </style>
 </head>
 <body>
-  <header class="hero">
-    <br>
-    <br>
-    <br>
-    <br>    
-    <br>
-    <br>    
-    <br>
-<nav>
-  <a href="/Index.html">Accueil</a>
-  <a href="/Activites.html">Activités</a>
-  <a href="/adherents/index.html">Espace adhérents</a>
-  <a href="/preinscriptions.html">Pré-Inscriptions</a>
-</nav>
-
+  <!-- Ton header existant -->
+  <header class="hero" id="header_PM">
+    <br><br><br><br><br><br><br>
+    <nav>
+      <a href="/Index.html">Accueil</a>
+      <a href="/Activites.html">Activités</a>
+      <a href="/adherents/index.html">Espace adhérents</a>
+      <a href="/preinscriptions.html">Pré-Inscriptions</a>
+    </nav>
   </header>
 
   <main class="container">
