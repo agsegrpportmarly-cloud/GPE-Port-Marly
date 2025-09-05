@@ -121,3 +121,14 @@ header.hero nav a{
 /* PM tweaks: header contain + navy outline */
 header.hero{background-position:center top;background-repeat:no-repeat;background-size:contain;}
 #header_PM nav a{-webkit-text-stroke:1px #003b5c;text-shadow:0 1px 0 #003b5c, 1px 0 0 #003b5c, 0 -1px 0 #003b5c, -1px 0 0 #003b5c;}
+
+/* Correctif anti-“dalles blanches” */
+.cards, .tiles, .grid, .sections, .modules, .panels,
+.container, main, .content { opacity: 1 !important; filter: none !important; }
+
+.card, .tile, .panel, .module, .bloc, .tuile {
+  background: rgba(255,255,255,.06) !important;
+  border: 1px solid rgba(255,255,255,.14) !important;
+  box-shadow: 0 6px 18px rgba(0,0,0,.25);
+  color: #f1f6f8 !important;
+}
