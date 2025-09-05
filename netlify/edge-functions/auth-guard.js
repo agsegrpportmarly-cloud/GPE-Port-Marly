@@ -47,6 +47,7 @@ function readCookie(header, name) {
   return m ? decodeURIComponent(m[1]) : null;
 }
 
+
 export default async (request, context) => {
   // log visible dans "Deploys → Edge Functions log"
   console.log("auth-guard hit", request.url);
