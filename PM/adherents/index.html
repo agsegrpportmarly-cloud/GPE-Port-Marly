@@ -24,17 +24,20 @@
   <a href="/preinscriptions.html">Pré-Inscriptions</a>
 </nav>
 
-  </header>
-
-  <main class="container">
+   <main class="container">
     <div style="text-align:right; margin-bottom:1rem;">
-      <a class="btn primary" href="/.netlify/functions/login">Se connecter</a>
-      <a class="btn" href="/.netlify/functions/logout">Se déconnecter</a>
+      <button id="btn-login" class="btn primary">Se connecter</button>
+      <button id="btn-logout" class="btn hide">Se déconnecter</button>
     </div>
 
-    <p class="muted">Choisissez une section :</p>
+    <!-- État : non connecté -->
+    <section id="guest">
+      <p class="muted">Connectez-vous pour accéder aux sections.</p>
+    </section>
 
-    <section>
+    <!-- État : connecté -->
+    <section id="app" class="hide">
+      <p class="muted" id="welcome"></p>
       <div class="grid">
         <a class="card" href="/adherents/clairiere 2PM/index.html">
           <h3>Meute 1ère <br>Port Marly</h3>
@@ -53,8 +56,7 @@
           <p>Informations du compte et préférences.</p>
         </a>
       </div>
-
-      <div class="grid" style="margin-top:1rem">
+            <div class="grid">
         <a class="card" href="/adherents/clairiere 2PM/index.html">
           <h3>Meute 3ème <br>Port Marly</h3>
           <p>Créer / modifier un dossier d’adhésion.</p>
@@ -74,5 +76,7 @@
       </div>
     </section>
   </main>
+
+  
 </body>
 </html>

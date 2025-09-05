@@ -5,6 +5,14 @@
   function = "auth-guard"
   path = "/adherents/*"
 
+[[edge_functions]]
+  function = "auth-guard"
+  path = "/adherents"
+
+[[edge_functions]]
+  function = "auth-guard"
+  path = "/adherents/index.html"
+
 [[redirects]]
   from = "/login"
   to   = "/.netlify/functions/login"
