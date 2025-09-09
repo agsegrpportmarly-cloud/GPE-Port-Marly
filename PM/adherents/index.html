@@ -13,9 +13,6 @@
   <script defer src="https://www.gstatic.com/firebasejs/10.12.3/firebase-app-compat.js"></script>
   <script defer src="https://www.gstatic.com/firebasejs/10.12.3/firebase-auth-compat.js"></script>
 
-  <!-- Auth0 SPA SDK -->
-  <script src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js" defer></script>
-
   <style>
     .container{max-width:1100px;margin:0 auto;padding:24px}
     .btn{padding:.6rem 1rem;border:1px solid #ccc;border-radius:.6rem;background:#043956;cursor:pointer}
@@ -37,6 +34,10 @@
   <a href="/adherents/index.html">Espace adhérents</a>
   <a href="/preinscriptions.html">Pré-Inscriptions</a>
     </nav>
+<nav class="auth-nav" style="display:flex; gap:10px; justify-content:flex-end; padding: 0 1rem;">
+  <a href="/login" class="button">Se connecter</a>
+  <a href="/logout" class="button secondary">Se déconnecter</a>
+</nav>
   </header>
 
   <main class="container">
@@ -117,58 +118,37 @@
   <footer>
     © AGSE – Groupes de Port-Marly <img src="../images/Logo_GS.png" alt="Logo AGSE" width="120" height="auto">
   </footer>
-<script>
-    // ---------- CONFIG AUTH0 (tes valeurs) ----------
-    const AUTH0_DOMAIN   = "dev-zl3rulx7tauw5f4h.us.auth0.com";
-    const AUTH0_CLIENTID = "etdVdsWZQSoyQtrNdUKDRxytmXM4cZFL";
-    // ------------------------------------------------
+ <script>
+    // Exemple minimal d'intégration boutons (à remplacer par votre logique d'auth réelle)
+    const loginBtn = document.getElementById('loginBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const search = document.getElementById('search');
 
-    let auth0Client;
-    const $ = (s, r=document) => r.querySelector(s);
-    const show = (el) => el.classList.remove('hide');
-    const hide = (el) => el.classList.add('hide');
+    // Simule un état d'auth (à brancher sur Netlify/Auth0 ensuite)
+    let isAuthenticated = false;
 
-    async function initAuth0() {
-      auth0Client = await auth0.createAuth0Client({
-        domain: AUTH0_DOMAIN,
-        clientId: AUTH0_CLIENTID,
-        authorizationParams: {
-          redirect_uri: window.location.origin + "/adherents/",
-        },
-        cacheLocation: "localstorage",
-        useRefreshTokens: true
-      });
-
-      // Callback Auth0 (retour redirection)
-      const q = window.location.search;
-      if (q.includes("code=") && q.includes("state=")) {
-        await auth0Client.handleRedirectCallback();
-        window.history.replaceState({}, document.title, window.location.pathname);
+    function renderAuth(){
+      if (isAuthenticated){
+        loginBtn.classList.add('hidden');
+        logoutBtn.classList.remove('hidden');
+        search.classList.remove('hidden');
+        // Débloquer les tuiles qui nécessitent une session
+        document.querySelectorAll('.tile[aria-disabled="true"]').forEach(el=>el.removeAttribute('aria-disabled'));
+      } else {
+        loginBtn.classList.remove('hidden');
+        logoutBtn.classList.add('hidden');
+        search.classList.add('hidden');
+        // Re-bloquer les rubriques privées
+        // (si vous préférez cacher, remplacez par el.classList.add('hidden'))
+        document.querySelectorAll('.tiles a').forEach((el, i)=>{
+          if ([2,3,6,7].includes(i)) el.setAttribute('aria-disabled','true');
+        });
       }
-
-      bindUI();
-      await render();
     }
+    renderAuth();
 
-    function bindUI() {
-      $("#btn-login")?.addEventListener("click", () => auth0Client.loginWithRedirect());
-      $("#btn-logout")?.addEventListener("click", () =>
-        auth0Client.logout({ logoutParams: { returnTo: window.location.origin + "/adherents/" } })
-      );
-    }
-
-async function render() {
-
-
-  const user = await auth0Client.getUser();
-  $("#welcome").textContent = `Bienvenue, ${user?.name || user?.email || "utilisateur"} !`;
-  hide($("#guest"));
-  hide($("#btn-login"));
-  show($("#btn-logout"));
-  show($("#app"));
-}
-
-    window.addEventListener("DOMContentLoaded", initAuth0);
+    loginBtn.addEventListener('click', ()=>{ isAuthenticated = true; renderAuth(); });
+    logoutBtn.addEventListener('click', ()=>{ isAuthenticated = false; renderAuth(); });
   </script>
 </body>
 </html>
