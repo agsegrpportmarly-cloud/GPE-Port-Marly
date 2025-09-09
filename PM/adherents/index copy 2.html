@@ -76,3 +76,65 @@
   </script>
 </body>
 </html>
+
+  <script>
+    // ---------- CONFIG AUTH0 (tes valeurs) ----------
+    const AUTH0_DOMAIN   = "dev-zl3rulx7tauw5f4h.us.auth0.com";
+    const AUTH0_CLIENTID = "etdVdsWZQSoyQtrNdUKDRxytmXM4cZFL";
+    // ------------------------------------------------
+
+    let auth0Client;
+    const $ = (s, r=document) => r.querySelector(s);
+    const show = (el) => el.classList.remove('hide');
+    const hide = (el) => el.classList.add('hide');
+
+    async function initAuth0() {
+      auth0Client = await auth0.createAuth0Client({
+        domain: AUTH0_DOMAIN,
+        clientId: AUTH0_CLIENTID,
+        authorizationParams: {
+          redirect_uri: window.location.origin + "/adherents/",
+        },
+        cacheLocation: "localstorage",
+        useRefreshTokens: true
+      });
+
+      // Callback Auth0 (retour redirection)
+      const q = window.location.search;
+      if (q.includes("code=") && q.includes("state=")) {
+        await auth0Client.handleRedirectCallback();
+        window.history.replaceState({}, document.title, window.location.pathname);
+      }
+
+      bindUI();
+      await render();
+    }
+
+    function bindUI() {
+      $("#btn-login")?.addEventListener("click", () => auth0Client.loginWithRedirect());
+      $("#btn-logout")?.addEventListener("click", () =>
+        auth0Client.logout({ logoutParams: { returnTo: window.location.origin + "/adherents/" } })
+      );
+    }
+
+async function render() {
+  const isAuth = await auth0Client.isAuthenticated();
+
+  if (!isAuth) {
+    show($("#guest"));
+    show($("#btn-login"));
+    hide($("#btn-logout"));
+    hide($("#app"));
+    return;
+  }
+
+  const user = await auth0Client.getUser();
+  $("#welcome").textContent = `Bienvenue, ${user?.name || user?.email || "utilisateur"} !`;
+  hide($("#guest"));
+  hide($("#btn-login"));
+  show($("#btn-logout"));
+  show($("#app"));
+}
+
+    window.addEventListener("DOMContentLoaded", initAuth0);
+  </script>
