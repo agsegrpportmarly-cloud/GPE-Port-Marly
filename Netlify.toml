@@ -1,16 +1,18 @@
 [build]
-  # Remplace "PM" par le dossier où se trouve ton site (index.html, etc.)
   publish = "PM"
 
-[functions]
-  node_bundler = "esbuild"
-
-# Protéger toutes les pages /adherents/* via une Edge Function
 [[edge_functions]]
   function = "auth-guard"
   path = "/adherents/*"
 
-# Raccourcis vers les fonctions de login/callback
+[[edge_functions]]
+  function = "auth-guard"
+  path = "/adherents"
+
+[[edge_functions]]
+  function = "auth-guard"
+  path = "/adherents/index.html"
+
 [[redirects]]
   from = "/login"
   to   = "/.netlify/functions/login"
@@ -19,4 +21,9 @@
 [[redirects]]
   from = "/callback"
   to   = "/.netlify/functions/callback"
+  status = 200
+
+[[redirects]]
+  from = "/logout"
+  to   = "/.netlify/functions/logout"
   status = 200

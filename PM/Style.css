@@ -1,5 +1,5 @@
 :root{
-  --bleu:#005C84; /* RVB 0-92-132 */
+  --bleu:#043956; /* RVB 0-92-132 */
   --bleu-fonce:#043956;
   --blanc:#ffffff;
   --gris:#eef2f4;
@@ -13,13 +13,8 @@ html,body{margin:0;padding:0;font-family:"Libre Baskerville", serif;background:#
 a{color:inherit;text-decoration:none}
 img{max-width:100%;display:block}
 header.hero{
-  background:var(--bleu) url("Header_PM.png") center top / contain no-repeat;
+  background:var(--bleu) url("Header_PM.png") center/cover no-repeat;
   color:var(--blanc);
-  min-height:320px;
-  padding: clamp(48px, 10vw, 120px) 16px 16px;
-}
-@media (max-width:640px){
-  header.hero{background-size:cover}
 }
 header.hero .overlay{
   background:rgba(0,0,0,.25);
@@ -33,17 +28,17 @@ header.hero .overlay{
 .container{max-width:var(--maxw);margin:0 auto;padding:0 16px}
 nav{
   display:flex;gap:16px;flex-wrap:wrap;align-items:center;justify-content:center;
-  padding:12px 0;background:rgba(150, 150, 150, 0.459);backdrop-filter:blur(2px)
+  padding:12px 0;background:rgba(172, 170, 170, 0.295);backdrop-filter:blur(2px)
 }
 nav a{
-  padding:10px 14px;border-radius:999px;background:rgba(255,255,255,.12);
+  padding:10px 14px;border-radius:999px;background:rgba(61, 60, 60, 0.829);
   transition:.2s; font-weight:700; letter-spacing:.2px
 }
-nav a:hover{background:rgba(255,255,255,.22); transform:translateY(-1px)}
+nav a:hover{background:rgba(209, 8, 8, 0.897); transform:translateY(-1px)}
 .card{
   background:var(--gris); color:#0e2233; border-radius:var(--radius); box-shadow:var(--shadow);
   padding:20px
-}
+  }
 /* Contour net autour du texte des menus dans le header */
 #header_PM nav a,
 #header_PM .menu a,
@@ -82,53 +77,61 @@ nav a:hover{background:rgba(255,255,255,.22); transform:translateY(-1px)}
     0 0 2px var(--menu-stroke);
 }
 
-.grid{display:grid;gap:20px}
+.grid{display:grid;gap:10px}
 .grid.cols-3{grid-template-columns:repeat(3,1fr)}
 @media (max-width:900px){.grid.cols-3{grid-template-columns:1fr}}
 .section{padding:32px 0}
-footer{
-  background:var(--bleu-fonce); color:#263c47; padding:24px; text-align:center; margin-top:40px
+
+footer {
+  background: var(--gris);
+  color: #043956;
+  padding: 24px;
+  margin-top: 40px;
+
+  display: flex;                 /* on active flex */
+  justify-content: space-between;/* texte à gauche, image à droite */
+  align-items: center;           /* alignement vertical */
+}
+html, body {
+  height: 100%;             /* toute la hauteur dispo */
+  margin: 0;                /* pas de marge par défaut */
+  display: flex;
+  flex-direction: column;   /* empile header, main, footer */
+}
+main {
+  flex: 1;                  /* prend toute la place disponible */
+}
+footer img {
+  max-width: 150px; /* limite la taille */
+  height: auto;
+  margin: 0;        /* plus de centrage automatique */
 }
 .brand-title{font-size:42px;line-height:1.1;margin:0;text-align:center;text-shadow:0 2px 10px rgba(0,0,0,.35)}
 .subtitle{opacity:.9;margin:8px 0 0;text-align:center}
 .btn{
-  display:inline-block; padding:12px 18px; border-radius:12px; background:var(--bleu); color:var(--blanc);
+  display:inline-block; padding:12px 18px; border-radius:16px; background:var(--bleu); color:var(--blanc);
   font-weight:700; box-shadow:var(--shadow); transition:.2s
 }
 .btn:hover{transform:translateY(-1px)}
 .gallery{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
-.gallery img{border-radius:12px; box-shadow:0 6px 18px rgba(0,0,0,.18)}
+.gallery img{border-radius:16px; box-shadow:0 6px 18px rgba(0,0,0,.18)}
 .notice{padding:12px 16px;border-radius:12px;background:#fff3cd;color:#5a4900;border:1px solid #ffe08a}
 
+    fieldset {
+      border: 2px solid #fff;
+      border-radius: 16px;
+      padding: 1rem;
+      margin-bottom: 1.5rem;
+      background: #0e2233;
+    }
+    legend {
+      font-weight: bold;
+      color: #fdfeff;
+      padding: 0 0.5rem;
+    }
+    label {
+      display: block;
+      margin-top: 0.5rem;
+      font-weight: 600;
+    }
 
-
-
-/* Liseré bleu marine autour du texte des menus sous le header */
-header.hero nav a{
-  color:#fff;
-  -webkit-text-stroke:1.2px var(--menu-stroke);
-  text-shadow:
-    0 1px 0 var(--menu-stroke),
-    1px 0 0 var(--menu-stroke),
-    0 -1px 0 var(--menu-stroke),
-    -1px 0 0 var(--menu-stroke);
-}
-/* Fallback (au cas où la feuille ne définit pas .btn/.card) */
-.btn{padding:.6rem 1rem;border:1px solid #ccc;border-radius:.6rem;background:#fff;cursor:pointer;text-decoration:none;display:inline-block}
-.btn.primary{border-color:#005c84;background:#005c84;color:#fff}
-.card{border:1px solid #e5e7eb;border-radius:16px;padding:18px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.06);text-decoration:none;color:inherit}
-
-/* PM tweaks: header contain + navy outline */
-header.hero{background-position:center top;background-repeat:no-repeat;background-size:contain;}
-#header_PM nav a{-webkit-text-stroke:1px #003b5c;text-shadow:0 1px 0 #003b5c, 1px 0 0 #003b5c, 0 -1px 0 #003b5c, -1px 0 0 #003b5c;}
-
-/* Correctif anti-“dalles blanches” */
-.cards, .tiles, .grid, .sections, .modules, .panels,
-.container, main, .content { opacity: 1 !important; filter: none !important; }
-
-.card, .tile, .panel, .module, .bloc, .tuile {
-  background: rgba(255,255,255,.06) !important;
-  border: 1px solid rgba(255,255,255,.14) !important;
-  box-shadow: 0 6px 18px rgba(0,0,0,.25);
-  color: #f1f6f8 !important;
-}
