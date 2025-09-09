@@ -1,0 +1,174 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Espace adhérents – Port‑Marly</title>
+
+  <!-- IMPORTANT : on pointe vers la feuille de style RACINE pour récupérer exactement le même header -->
+  <!-- Si votre CSS racine s'appelle différemment, gardez le chemin ABSOLU qui commence par / -->
+  <link rel="stylesheet" href="/Style.css">
+
+  <!-- Police utilisée sur le site -->
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- (Optionnel) scripts d'auth si nécessaires ailleurs -->
+  <!-- <script defer src="https://www.gstatic.com/firebasejs/10.12.3/firebase-app-compat.js"></script>
+  <script defer src="https://www.gstatic.com/firebasejs/10.12.3/firebase-auth-compat.js"></script> -->
+
+  <!-- Correctifs VISUELS spécifiques à la page adhérents (à mettre APRÈS Style.css) -->
+  <style>
+    :root{
+      --pm-bg: #0b2f3a;                 /* fond site */
+      --pm-card: rgba(255,255,255,.08); /* fond des tuiles */
+      --pm-border: rgba(255,255,255,.16);
+      --pm-text: #f1f6f8;
+      --pm-text-soft: rgba(255,255,255,.9);
+      --pm-primary: #005C84;            /* RVB 0 92 132 */
+    }
+
+    /* S'assure que le fond de page suit celui des autres pages (ne remplace rien si déjà défini) */
+    body { background: var(--pm-bg); }
+
+    /* Barre de navigation : on réutilise les styles existants du site via /Style.css.
+       Ici, on ne touche qu'à des petits espacements pour cette page. */
+    header.hero { margin-bottom: 32px; }
+
+    /* Conteneur principal */
+    .dashboard { max-width: 1200px; margin: 0 auto; padding: 0 24px 48px; }
+
+    /* Barre d'actions (connexion / recherche) */
+    .actions { display: flex; gap: 12px; align-items: center; justify-content: flex-end; margin: -20px 0 24px; }
+    .btn { border: 1px solid transparent; border-radius: 12px; padding: 10px 14px; font-weight: 700; cursor: pointer; }
+    .btn-primary { background: var(--pm-primary); color: #fff; box-shadow: 0 6px 18px rgba(0,0,0,.25); }
+    .btn-secondary { background: rgba(255,255,255,.06); color: #fff; border-color: var(--pm-border); }
+    .btn:hover { transform: translateY(-1px); box-shadow: 0 10px 24px rgba(0,0,0,.25); }
+
+    /* Grille de tuiles */
+    .tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 24px; }
+
+    /* ⚠️ Problème des « blocs blancs » : NE PAS utiliser opacity sur le conteneur ! */
+    .tile { 
+      display: block; text-decoration: none;
+      background: var(--pm-card);              /* fond semi-transparant propre */
+      border: 1px solid var(--pm-border);
+      border-radius: 18px; padding: 22px 20px;
+      box-shadow: 0 8px 28px rgba(0,0,0,.28);
+      transition: transform .15s ease, box-shadow .15s ease, border-color .15s ease;
+      color: var(--pm-text);
+      opacity: 1 !important;                   /* neutralise d'éventuels styles existants */
+    }
+    .tile:hover { transform: translateY(-2px); box-shadow: 0 14px 36px rgba(0,0,0,.34); border-color: rgba(255,255,255,.28); }
+    .tile h3 { margin: 0 0 8px; font-size: 1.15rem; font-weight: 700; color: var(--pm-text); }
+    .tile p { margin: 0; line-height: 1.35; color: var(--pm-text-soft); }
+
+    /* État désactivé pour les rubriques non accessibles tant que non connecté */
+    .tile[aria-disabled="true"] { filter: grayscale(.12) brightness(.92); opacity: .65 !important; pointer-events: none; }
+
+    /* Champ de recherche optionnel */
+    .search { height: 40px; border-radius: 12px; border: 1px solid var(--pm-border); background: rgba(255,255,255,.06); color: #fff; padding: 0 12px; min-width: 280px; }
+    .search::placeholder { color: rgba(255,255,255,.75); }
+    .hidden { display: none !important; }
+
+    /* Petits ajustements responsives */
+    @media (max-width: 560px){ .actions { justify-content: stretch; flex-wrap: wrap; } .search { flex: 1; min-width: 100%; } }
+  </style>
+</head>
+
+<body>
+  <!-- ======= HEADER IDENTIQUE AUX AUTRES PAGES ======= -->
+  <header class="hero">
+    <!-- Reprend exactement le même markup/nav que sur Index.html -->
+    <nav>
+      <a href="/Index.html">Accueil</a>
+      <a href="/Activites.html">Activités</a>
+      <a class="active" href="/adherents/">Espace adhérents</a>
+      <a href="/Pre-inscriptions.html">Pré-inscriptions</a>
+    </nav>
+  </header>
+
+  <main class="dashboard" role="main">
+    <div class="actions">
+      <input id="search" class="search hidden" type="search" placeholder="Rechercher un dossier…" aria-label="Rechercher un dossier">
+      <button id="loginBtn" class="btn btn-primary">Se connecter</button>
+      <button id="logoutBtn" class="btn btn-secondary hidden">Se déconnecter</button>
+    </div>
+
+    <section class="tiles" aria-label="Navigation espace adhérents">
+      <a class="tile" href="#claire-2pm">
+        <h3>Clairière 2PM</h3>
+        <p>Créer / modifier un dossier d’adhésion.</p>
+      </a>
+
+      <a class="tile" href="#chefs">
+        <h3>Chefs &amp; Responsables</h3>
+        <p>Formulaire et documents pour les chefs.</p>
+      </a>
+
+      <a class="tile" href="#dossiers" aria-disabled="true">
+        <h3>Dossiers</h3>
+        <p>Consulter les PDF générés et pièces jointes.</p>
+      </a>
+
+      <a class="tile" href="#parametres" aria-disabled="true">
+        <h3>Paramètres</h3>
+        <p>Informations du compte et préférences.</p>
+      </a>
+
+      <a class="tile" href="#meute-8pm">
+        <h3>Meute 8ème Port‑Marly</h3>
+        <p>Créer / modifier un dossier d’adhésion.</p>
+      </a>
+
+      <a class="tile" href="#chefs-2">
+        <h3>Chefs &amp; Responsables</h3>
+        <p>Formulaire et documents pour les chefs.</p>
+      </a>
+
+      <a class="tile" href="#dossiers-2" aria-disabled="true">
+        <h3>Dossiers</h3>
+        <p>Consulter les PDF générés et pièces jointes.</p>
+      </a>
+
+      <a class="tile" href="#parametres-2" aria-disabled="true">
+        <h3>Paramètres</h3>
+        <p>Informations du compte et préférences.</p>
+      </a>
+    </section>
+  </main>
+
+  <script>
+    // Exemple minimal d'intégration boutons (à remplacer par votre logique d'auth réelle)
+    const loginBtn = document.getElementById('loginBtn');
+    const logoutBtn = document.getElementById('logoutBtn');
+    const search = document.getElementById('search');
+
+    // Simule un état d'auth (à brancher sur Netlify/Auth0 ensuite)
+    let isAuthenticated = false;
+
+    function renderAuth(){
+      if (isAuthenticated){
+        loginBtn.classList.add('hidden');
+        logoutBtn.classList.remove('hidden');
+        search.classList.remove('hidden');
+        // Débloquer les tuiles qui nécessitent une session
+        document.querySelectorAll('.tile[aria-disabled="true"]').forEach(el=>el.removeAttribute('aria-disabled'));
+      } else {
+        loginBtn.classList.remove('hidden');
+        logoutBtn.classList.add('hidden');
+        search.classList.add('hidden');
+        // Re-bloquer les rubriques privées
+        // (si vous préférez cacher, remplacez par el.classList.add('hidden'))
+        document.querySelectorAll('.tiles a').forEach((el, i)=>{
+          if ([2,3,6,7].includes(i)) el.setAttribute('aria-disabled','true');
+        });
+      }
+    }
+    renderAuth();
+
+    loginBtn.addEventListener('click', ()=>{ isAuthenticated = true; renderAuth(); });
+    logoutBtn.addEventListener('click', ()=>{ isAuthenticated = false; renderAuth(); });
+  </script>
+</body>
+</html>
