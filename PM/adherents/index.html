@@ -159,6 +159,7 @@
 
 async function render() {
 
+
   const user = await auth0Client.getUser();
   $("#welcome").textContent = `Bienvenue, ${user?.name || user?.email || "utilisateur"} !`;
   hide($("#guest"));
