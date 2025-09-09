@@ -117,37 +117,66 @@
   <footer>
     © AGSE – Groupes de Port-Marly <img src="../images/Logo_GS.png" alt="Logo AGSE" width="120" height="auto">
   </footer>
- <script>
-    // Exemple minimal d'intégration boutons (à remplacer par votre logique d'auth réelle)
-    const loginBtn = document.getElementById('loginBtn');
-    const logoutBtn = document.getElementById('logoutBtn');
-    const search = document.getElementById('search');
+<script>
+    // ---------- CONFIG AUTH0 (tes valeurs) ----------
+    const AUTH0_DOMAIN   = "dev-zl3rulx7tauw5f4h.us.auth0.com";
+    const AUTH0_CLIENTID = "etdVdsWZQSoyQtrNdUKDRxytmXM4cZFL";
+    // ------------------------------------------------
 
-    // Simule un état d'auth (à brancher sur Netlify/Auth0 ensuite)
-    let isAuthenticated = false;
+    let auth0Client;
+    const $ = (s, r=document) => r.querySelector(s);
+    const show = (el) => el.classList.remove('hide');
+    const hide = (el) => el.classList.add('hide');
 
-    function renderAuth(){
-      if (isAuthenticated){
-        loginBtn.classList.add('hidden');
-        logoutBtn.classList.remove('hidden');
-        search.classList.remove('hidden');
-        // Débloquer les tuiles qui nécessitent une session
-        document.querySelectorAll('.tile[aria-disabled="true"]').forEach(el=>el.removeAttribute('aria-disabled'));
-      } else {
-        loginBtn.classList.remove('hidden');
-        logoutBtn.classList.add('hidden');
-        search.classList.add('hidden');
-        // Re-bloquer les rubriques privées
-        // (si vous préférez cacher, remplacez par el.classList.add('hidden'))
-        document.querySelectorAll('.tiles a').forEach((el, i)=>{
-          if ([2,3,6,7].includes(i)) el.setAttribute('aria-disabled','true');
-        });
+    async function initAuth0() {
+      auth0Client = await auth0.createAuth0Client({
+        domain: AUTH0_DOMAIN,
+        clientId: AUTH0_CLIENTID,
+        authorizationParams: {
+          redirect_uri: window.location.origin + "/adherents/",
+        },
+        cacheLocation: "localstorage",
+        useRefreshTokens: true
+      });
+
+      // Callback Auth0 (retour redirection)
+      const q = window.location.search;
+      if (q.includes("code=") && q.includes("state=")) {
+        await auth0Client.handleRedirectCallback();
+        window.history.replaceState({}, document.title, window.location.pathname);
       }
-    }
-    renderAuth();
 
-    loginBtn.addEventListener('click', ()=>{ isAuthenticated = true; renderAuth(); });
-    logoutBtn.addEventListener('click', ()=>{ isAuthenticated = false; renderAuth(); });
+      bindUI();
+      await render();
+    }
+
+    function bindUI() {
+      $("#btn-login")?.addEventListener("click", () => auth0Client.loginWithRedirect());
+      $("#btn-logout")?.addEventListener("click", () =>
+        auth0Client.logout({ logoutParams: { returnTo: window.location.origin + "/adherents/" } })
+      );
+    }
+
+async function render() {
+  const isAuth = await auth0Client.isAuthenticated();
+
+  if (!isAuth) {
+    show($("#guest"));
+    show($("#btn-login"));
+    hide($("#btn-logout"));
+    hide($("#app"));
+    return;
+  }
+
+  const user = await auth0Client.getUser();
+  $("#welcome").textContent = `Bienvenue, ${user?.name || user?.email || "utilisateur"} !`;
+  hide($("#guest"));
+  hide($("#btn-login"));
+  show($("#btn-logout"));
+  show($("#app"));
+}
+
+    window.addEventListener("DOMContentLoaded", initAuth0);
   </script>
 </body>
 </html>
