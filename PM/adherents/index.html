@@ -158,15 +158,6 @@
     }
 
 async function render() {
-  const isAuth = await auth0Client.isAuthenticated();
-
-  if (!isAuth) {
-    show($("#guest"));
-    show($("#btn-login"));
-    hide($("#btn-logout"));
-    hide($("#app"));
-    return;
-  }
 
   const user = await auth0Client.getUser();
   $("#welcome").textContent = `Bienvenue, ${user?.name || user?.email || "utilisateur"} !`;
