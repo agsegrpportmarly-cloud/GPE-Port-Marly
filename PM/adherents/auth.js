@@ -11,12 +11,35 @@ async function waitForAuth0Sdk(maxTries = 40, delayMs = 100) {
 }
 
 // ... tes constantes (AUTH0_DOMAIN, etc.) et le reste ...
+// --- Loader Auth0 (charge le SDK si absent) ---
+const AUTH0_SDK_URL_PRIMARY  = "https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js";
+const AUTH0_SDK_URL_FALLBACK = "https://cdn.jsdelivr.net/npm/@auth0/auth0-spa-js@2.1.4/dist/auth0-spa-js.production.js";
 
+function loadScript(src) {
+  return new Promise((resolve, reject) => {
+    const s = document.createElement("script");
+    s.src = src;
+    s.defer = true;
+    s.onload = resolve;
+    s.onerror = reject;
+    document.head.appendChild(s);
+  });
+}
+
+async function ensureAuth0Sdk() {
+  if (typeof createAuth0Client === "function") return true;
+  try {
+    await loadScript(AUTH0_SDK_URL_PRIMARY);
+  } catch {
+    // essaie un CDN alternatif
+    await loadScript(AUTH0_SDK_URL_FALLBACK);
+  }
+  return typeof createAuth0Client === "function";
+}
 async function initAuth() {
-  // ⬇️ nouveau garde-fou
-  const ok = await waitForAuth0Sdk();
+  const ok = await ensureAuth0Sdk();
   if (!ok) {
-    console.error("Auth0 SDK non chargé (createAuth0Client undefined)");
+    console.error("Auth0 SDK non chargé après tentative (CDN bloqué ?)");
     return;
   }
 
@@ -29,6 +52,9 @@ async function initAuth() {
     },
     cacheLocation: "localstorage"
   });
+  // ... le reste inchangé
+}
+
   window.auth0Client = auth0Client;
   AUTH_READY = true;
 

@@ -9,7 +9,9 @@
   <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
 
   <!-- Auth0 SPA SDK (front) -->
-<script defer src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js"></script>
+<script defer src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js"
+        onerror="var s=document.createElement('script');s.defer=true;s.src='https://cdn.jsdelivr.net/npm/@auth0/auth0-spa-js@2.1.4/dist/auth0-spa-js.production.js';document.head.appendChild(s);">
+</script>
 <script defer src="./auth.js"></script>
 
 
