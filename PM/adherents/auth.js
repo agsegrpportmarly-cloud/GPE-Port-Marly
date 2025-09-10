@@ -37,10 +37,8 @@ function bindUi() {
   document.getElementById("btn-login")?.addEventListener("click", login);
   document.getElementById("btn-logout")?.addEventListener("click", logout);
   document.getElementById("btn-request-access")?.addEventListener("click", requestAccess);
-
-  // Liens du header
-  document.getElementById("link-login")?.addEventListener("click", (e)=>{ e.preventDefault(); login(); });
-  document.getElementById("link-logout")?.addEventListener("click", (e)=>{ e.preventDefault(); logout(); });
+  document.getElementById("link-login")?.addEventListener("click", e=>{e.preventDefault();login();});
+  document.getElementById("link-logout")?.addEventListener("click", e=>{e.preventDefault();logout();});
 }
 
 async function render() {
@@ -145,3 +143,19 @@ Merci !`;
     window.location.href = "mailto:agse.grp.portmarly@gmail.com?subject=Demande%20d%27accès%20Espace%20adhérents";
   }
 }
+(function(){
+  const qs = new URLSearchParams(location.search);
+  if (qs.get('debug') !== '1') return;
+  const box = document.createElement('div');
+  box.style.cssText='position:fixed;top:8px;right:8px;background:#111;color:#0f0;padding:8px 10px;border-radius:8px;font:12px/1.2 monospace;z-index:99999';
+  box.textContent='auth…';
+  document.body.appendChild(box);
+  (async()=>{
+    try{
+      const ok = await auth0Client.isAuthenticated();
+      const c  = ok ? await auth0Client.getIdTokenClaims() : null;
+      const r  = c ? (c["https://pmarly/roles"]||[]) : [];
+      box.textContent = `auth=${ok} roles=${JSON.stringify(r)}`;
+    }catch(e){ box.textContent='debug err'; }
+  })();
+})();
