@@ -5,7 +5,15 @@
 [[edge_functions]]
   function = "auth-guard"
   path = "/adherents/*"
+[build]
+  publish = "PM"
 
+[[redirects]]
+  from = "/adherents"
+  to = "/adherents/"
+  status = 301
+  force = true
+  
 [[redirects]]
   from = "/login"
   to   = "/.netlify/functions/login"
