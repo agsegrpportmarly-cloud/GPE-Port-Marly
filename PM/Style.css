@@ -141,3 +141,11 @@ footer img {
 .button{padding:.4rem .8rem; border:1px solid #ccc; border-radius:.6rem; background:#043956; color:#fff;}
 .button.secondary{background:transparent; color:#043956;}
 .hide{display:none;}
+
+.hero { position: relative; }
+.auth-float { position: absolute; top: 12px; right: 12px; z-index: 50; }
+.pill { display:inline-block; padding:.45rem .9rem; border-radius:999px; font-weight:600; text-decoration:none;
+        border:1px solid rgba(255,255,255,.6); background:rgba(0,0,0,.35); color:#fff; backdrop-filter:blur(4px);
+        box-shadow:0 2px 10px rgba(0,0,0,.25); }
+.pill:hover { background: rgba(0,0,0,.5); }
+.pill.logout { border-color:#005c84; background:#005c84; }

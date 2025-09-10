@@ -1,4 +1,7 @@
 let auth0Client = null;
+let AUTH_READY = false; // ← on saura quand Auth0 est prêt
+
+
 
 // === Paramètres à ADAPTER à ton tenant Auth0 ===
 const AUTH0_DOMAIN    = "<ton-domaine>.eu.auth0.com";
@@ -9,6 +12,11 @@ const ROLES_CLAIM     = "https://pmarly/roles"; // ex: ["chef","tresorier","admi
 document.addEventListener("DOMContentLoaded", initAuth);
 
 async function initAuth() {
+  if (typeof createAuth0Client === "undefined") {
+    console.error("Auth0 SDK non chargé (createAuth0Client undefined)");
+    return;
+  }
+
   auth0Client = await createAuth0Client({
     domain: AUTH0_DOMAIN,
     clientId: AUTH0_CLIENT_ID,
@@ -18,8 +26,9 @@ async function initAuth() {
     },
     cacheLocation: "localstorage"
   });
+  window.auth0Client = auth0Client; // debug console
+  AUTH_READY = true;                // ← prêt
 
-  // Callback (code/state)
   if (window.location.search.includes("code=") && window.location.search.includes("state=")) {
     try {
       await auth0Client.handleRedirectCallback();
@@ -28,6 +37,11 @@ async function initAuth() {
       console.error("Callback error:", e);
     }
   }
+
+  bindUi();
+  await render();
+}
+
 
   bindUi();
   await render();
@@ -58,11 +72,42 @@ function setAuthCta(isAuthenticated) {
     fresh.addEventListener("click", (e) => { e.preventDefault(); login(); });
   }
 }
+function setAuthCta(isAuthenticated) {
+  const el = document.getElementById("auth-cta");
+  if (!el) return;
+
+  // Reset propre des listeners
+  const clone = el.cloneNode(true);
+  el.replaceWith(clone);
+  const btn = document.getElementById("auth-cta");
+
+  // Libellé + style
+  btn.textContent = isAuthenticated ? "Se déconnecter" : "Se connecter";
+  btn.classList.toggle("logout", !!isAuthenticated);
+
+  // Clic
+  btn.addEventListener("click", async (e) => {
+    e.preventDefault();
+    // Si l'init n'est pas finie, on attend puis on relance l’action
+    if (!AUTH_READY) {
+      try { await initAuth(); } catch {}
+    }
+    if (!auth0Client) {
+      console.error("Auth0 non initialisé");
+      return;
+    }
+    if (isAuthenticated) {
+      await logout();
+    } else {
+      await login();
+    }
+  });
+}
 
 async function render() {
   const isAuthenticated = await auth0Client.isAuthenticated();
 
-  // ⬇️ Ici, juste après la ligne ci-dessus
+  // ⬇️ IMPORTANT : met à jour le bouton flottant à chaque render
   setAuthCta(isAuthenticated);
 
   const guest   = document.getElementById("guest");
@@ -121,15 +166,15 @@ function filterRoleCards(userRoles) {
 }
 
 async function login() {
+  if (!auth0Client) await initAuth();
   await auth0Client.loginWithRedirect({
     authorizationParams: { redirect_uri: window.location.origin + "/adherents/" }
   });
 }
 
 async function logout() {
-  await auth0Client.logout({
-    logoutParams: { returnTo: window.location.origin + "/" }
-  });
+  if (!auth0Client) await initAuth();
+  await auth0Client.logout({ logoutParams: { returnTo: window.location.origin + "/" } });
 }
 
 async function requestAccess() {
