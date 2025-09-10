@@ -1,25 +1,26 @@
 export const config = {
-  path: ["/adherents", "/adherents/", "/adherents/index.html", "/adherents/*"]
+  // ⚠️ Ne cible PLUS la racine /adherents ni /adherents/index.html
+  path: ["/adherents/*"]
 };
 
 const COOKIE = Deno.env.get('SESSION_COOKIE_NAME') || 'pm_session';
 const DOMAIN = Deno.env.get('AUTH0_DOMAIN');
 const ISSUER = `https://${DOMAIN}/`;
 
+// Harmonise en minuscules pour éviter les soucis de casse et d'espaces encodés
 const RULES = [
-  { prefix: "/adherents/clairiere 2PM/", role: "C2PM" },
-  { prefix: "/adherents/clairiere 4PM/", role: "C4PM" },
-  { prefix: "/adherents/meute 1PM/",     role: "M1PM" },
-  { prefix: "/adherents/meute 3PM/",     role: "M3PM" },
-  { prefix: "/adherents/compagnie 2PM/", role: "CI2PM" },
-  { prefix: "/adherents/compagnie 4PM/", role: "CI4PM" },
-  { prefix: "/adherents/troupe 1 PM/",   role: "T1PM" },
-  { prefix: "/adherents/troupe 3 PM/",   role: "T3PM" },
+  { prefix: "/adherents/clairiere 2pm/", role: "C2PM" },
+  { prefix: "/adherents/clairiere 4pm/", role: "C4PM" },
+  { prefix: "/adherents/compagnie 2pm/", role: "CI2PM" },
+  { prefix: "/adherents/compagnie 4pm/", role: "CI4PM" },
+  { prefix: "/adherents/meute 1pm/",     role: "M1PM" },
+  { prefix: "/adherents/meute 3pm/",     role: "M3PM" },
+  { prefix: "/adherents/troupe 1 pm/",   role: "T1PM" },
+  { prefix: "/adherents/troupe 3 pm/",   role: "T3PM" },
   { prefix: "/adherents/feu/",           role: "FDNJ" },
   { prefix: "/adherents/clan/",          role: "CSG" },
-  { prefix: "/adherents/",               role: "admin" },
-];
-
+  // ❌ PAS de règle pour "/adherents/" : la page racine reste publique
+].map(r => ({ prefix: r.prefix.toLowerCase(), role: r.role }));
 
 let JWKS_CACHE = null, JWKS_TIME = 0;
 async function getJWKS() {
@@ -69,21 +70,27 @@ function getRoles(payload) {
 
 export default async (request, context) => {
   const url = new URL(request.url);
-  const requireLogin = new Response(null, {
+  const pathname = decodeURIComponent(url.pathname).toLowerCase();
+
+  // 1) Ne protéger QUE si une règle correspond
+  const rule = RULES.find(r => pathname.startsWith(r.prefix));
+  if (!rule) {
+    // -> racine /adherents/ ou autres chemins non listés : accès public
+    return context.next();
+  }
+
+  // 2) Pour les chemins protégés : exiger une session
+  const token = readCookie(request.headers.get('cookie') || '', COOKIE);
+  const redirectToPublic = new Response(null, {
     status: 302,
-    headers: { Location: `/login?returnTo=${encodeURIComponent(url.pathname)}` }
+    headers: { Location: `/adherents/?returnTo=${encodeURIComponent(url.pathname)}` }
   });
+  if (!token) return redirectToPublic;
 
   try {
-    const token = readCookie(request.headers.get('cookie') || '', COOKIE);
-    if (!token) return requireLogin;
-
     const payload = await verifyJWT(token);
     const roles   = getRoles(payload);
     const isAdmin = roles.includes("admin");
-
-    const rule = RULES.find(r => url.pathname.startsWith(r.prefix));
-    if (!rule) return context.next(); // juste connecté suffit
 
     if (isAdmin || roles.includes(rule.role)) return context.next();
 
@@ -92,6 +99,6 @@ export default async (request, context) => {
       headers: { "content-type": "text/plain; charset=utf-8" }
     });
   } catch {
-    return requireLogin;
+    return redirectToPublic;
   }
 };
