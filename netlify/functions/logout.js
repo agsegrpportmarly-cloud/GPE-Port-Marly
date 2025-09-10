@@ -16,3 +16,4 @@ exports.handler = async (event) => {
   const returnTo = `https://${event.headers.host}/`;
   return { statusCode: 302, headers: { 'Set-Cookie': clear, Location: returnTo } };
 };
+

@@ -19,6 +19,7 @@ const RULES = [
   { prefix: "/adherents/clan/",          role: "CSG" },
 ];
 
+
 let JWKS_CACHE = null, JWKS_TIME = 0;
 async function getJWKS() {
   const now = Date.now();

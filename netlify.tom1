@@ -20,3 +20,4 @@
   from = "/logout"
   to   = "/.netlify/functions/logout"
   status = 200
+  
