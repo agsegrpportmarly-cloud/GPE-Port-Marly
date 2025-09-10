@@ -37,6 +37,10 @@ function bindUi() {
   document.getElementById("btn-login")?.addEventListener("click", login);
   document.getElementById("btn-logout")?.addEventListener("click", logout);
   document.getElementById("btn-request-access")?.addEventListener("click", requestAccess);
+
+  // Liens du header
+  document.getElementById("link-login")?.addEventListener("click", (e)=>{ e.preventDefault(); login(); });
+  document.getElementById("link-logout")?.addEventListener("click", (e)=>{ e.preventDefault(); logout(); });
 }
 
 async function render() {
