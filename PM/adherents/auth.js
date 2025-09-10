@@ -41,31 +41,43 @@ function bindUi() {
   document.getElementById("link-login")?.addEventListener("click", (e)=>{ e.preventDefault(); login(); });
   document.getElementById("link-logout")?.addEventListener("click", (e)=>{ e.preventDefault(); logout(); });
 }
+function setAuthCta(isAuthenticated) {
+  const cta = document.getElementById("auth-cta");
+  if (!cta) return;
+  // reset
+  cta.classList.remove("logout");
+  cta.replaceWith(cta.cloneNode(true)); // enlève anciens listeners
+  const fresh = document.getElementById("auth-cta");
 
+  if (isAuthenticated) {
+    fresh.textContent = "Se déconnecter";
+    fresh.classList.add("logout");
+    fresh.addEventListener("click", (e) => { e.preventDefault(); logout(); });
+  } else {
+    fresh.textContent = "Se connecter";
+    fresh.addEventListener("click", (e) => { e.preventDefault(); login(); });
+  }
+}
 
 async function render() {
   const isAuthenticated = await auth0Client.isAuthenticated();
+
+  // ⬇️ Ici, juste après la ligne ci-dessus
+  setAuthCta(isAuthenticated);
 
   const guest   = document.getElementById("guest");
   const app     = document.getElementById("app");
   const noRole  = document.getElementById("no-role");
   const fsGen   = document.getElementById("fs-general");
   const fsRoles = document.getElementById("fs-roles");
-
-  const linkLogin  = document.getElementById("link-login");
-  const linkLogout = document.getElementById("link-logout");
-  const welcome    = document.getElementById("welcome");
+  const welcome = document.getElementById("welcome");
 
   if (!isAuthenticated) {
-    // Non connecté
     guest.classList.remove("hide");
     app.classList.add("hide");
     noRole.classList.add("hide");
     fsGen.classList.add("hide");
     fsRoles.classList.add("hide");
-
-    linkLogin?.classList.remove("hide");
-    linkLogout?.classList.add("hide");
     return;
   }
 
@@ -158,3 +170,4 @@ Merci !`;
     }catch(e){ box.textContent='debug err'; }
   })();
 })();
+

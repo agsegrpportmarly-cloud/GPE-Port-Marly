@@ -22,10 +22,47 @@
     .muted{color:#6b7280}
     .hide{display:none}
     nav a{margin-right:1rem}
+    /* Le header doit être positionné pour accueillir le bouton absolu */
+.hero { position: relative; }
+
+/* Container du bouton en haut-droite */
+.auth-float {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+  z-index: 50;
+}
+
+/* Style du bouton – look discret sur image */
+.pill {
+  display: inline-block;
+  padding: .45rem .9rem;
+  border-radius: 999px;
+  font-weight: 600;
+  text-decoration: none;
+  border: 1px solid rgba(255,255,255,.6);
+  background: rgba(0,0,0,.35);
+  color: #fff;
+  backdrop-filter: blur(4px);
+  box-shadow: 0 2px 10px rgba(0,0,0,.25);
+}
+.pill:hover { background: rgba(0,0,0,.5); }
+
+/* Variante quand on est connecté (optionnel) */
+.pill.logout {
+  border-color: #005c84;
+  background: #005c84;
+}
+.pill.logout:hover { filter: brightness(1.05); }
+
   </style>
 </head>
 <body>
   <header class="hero">
+    <!-- Bouton flottant en haut à droite -->
+<div class="auth-float">
+  <a href="#" id="auth-cta" class="pill">Se connecter</a>
+</div>
     <br><br><br><br><br><br><br>
 <nav class="topnav">
   <div class="left">
