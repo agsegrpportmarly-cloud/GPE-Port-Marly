@@ -1,32 +1,55 @@
-// --- Config ---
+// tout en haut de auth.js
 let auth0Client = null;
 let AUTH_READY = false;
 
-const AUTH0_DOMAIN    = "<ton-domaine>.eu.auth0.com";
-const AUTH0_CLIENT_ID = "<ton-client-id>";
-const AUTH0_AUDIENCE  = undefined; // si pas d'API
-const ROLES_CLAIM     = "https://pmarly/roles"; // claim namespacé dans l'ID token
-
-// --- Helpers UI ---
-function setAuthCta(isAuthenticated) {
-  const btn = document.getElementById("auth-cta");
-  if (!btn) return;
-
-  btn.textContent = isAuthenticated ? "Se déconnecter" : "Se connecter";
-  btn.classList.toggle("logout", !!isAuthenticated);
-
-  // Remplace tout listener précédent proprement
-  btn.onclick = async (e) => {
-    e.preventDefault();
-    if (!AUTH_READY || !auth0Client) return; // évite clic avant init
-
-    if (isAuthenticated) {
-      await logout();
-    } else {
-      await login();
-    }
-  };
+async function waitForAuth0Sdk(maxTries = 40, delayMs = 100) {
+  for (let i = 0; i < maxTries; i++) {
+    if (typeof createAuth0Client === "function") return true;
+    await new Promise(r => setTimeout(r, delayMs));
+  }
+  return false;
 }
+
+// ... tes constantes (AUTH0_DOMAIN, etc.) et le reste ...
+
+async function initAuth() {
+  // ⬇️ nouveau garde-fou
+  const ok = await waitForAuth0Sdk();
+  if (!ok) {
+    console.error("Auth0 SDK non chargé (createAuth0Client undefined)");
+    return;
+  }
+
+  auth0Client = await createAuth0Client({
+    domain: AUTH0_DOMAIN,
+    clientId: AUTH0_CLIENT_ID,
+    authorizationParams: {
+      redirect_uri: window.location.origin + "/adherents/",
+      audience: AUTH0_AUDIENCE
+    },
+    cacheLocation: "localstorage"
+  });
+  window.auth0Client = auth0Client;
+  AUTH_READY = true;
+
+  if (window.location.search.includes("code=") && window.location.search.includes("state=")) {
+    try {
+      await auth0Client.handleRedirectCallback();
+      window.history.replaceState({}, document.title, "/adherents/");
+    } catch (e) {
+      console.error("Callback error:", e);
+    }
+  }
+
+  bindUi();
+  await render();
+}
+
+// démarre après DOM prêt (pas de await top-level)
+window.addEventListener("DOMContentLoaded", () => {
+  initAuth().catch(console.error);
+});
+
 
 function bindUi() {
   // Bouton "Demander l'accès" (section no-role)
