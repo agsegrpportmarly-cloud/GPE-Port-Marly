@@ -34,12 +34,14 @@ async function initAuth() {
 }
 
 function bindUi() {
-  document.getElementById("btn-login")?.addEventListener("click", login);
-  document.getElementById("btn-logout")?.addEventListener("click", logout);
+  // Bouton “Demander l’accès”
   document.getElementById("btn-request-access")?.addEventListener("click", requestAccess);
-  document.getElementById("link-login")?.addEventListener("click", e=>{e.preventDefault();login();});
-  document.getElementById("link-logout")?.addEventListener("click", e=>{e.preventDefault();logout();});
+
+  // Liens du header
+  document.getElementById("link-login")?.addEventListener("click", (e)=>{ e.preventDefault(); login(); });
+  document.getElementById("link-logout")?.addEventListener("click", (e)=>{ e.preventDefault(); logout(); });
 }
+
 
 async function render() {
   const isAuthenticated = await auth0Client.isAuthenticated();
@@ -50,9 +52,9 @@ async function render() {
   const fsGen   = document.getElementById("fs-general");
   const fsRoles = document.getElementById("fs-roles");
 
-  const btnLogin  = document.getElementById("btn-login");
-  const btnLogout = document.getElementById("btn-logout");
-  const welcome   = document.getElementById("welcome");
+  const linkLogin  = document.getElementById("link-login");
+  const linkLogout = document.getElementById("link-logout");
+  const welcome    = document.getElementById("welcome");
 
   if (!isAuthenticated) {
     // Non connecté
@@ -62,8 +64,8 @@ async function render() {
     fsGen.classList.add("hide");
     fsRoles.classList.add("hide");
 
-    btnLogin.classList.remove("hide");
-    btnLogout.classList.add("hide");
+    linkLogin?.classList.remove("hide");
+    linkLogout?.classList.add("hide");
     return;
   }
 
@@ -71,31 +73,28 @@ async function render() {
   guest.classList.add("hide");
   app.classList.remove("hide");
 
-  btnLogin.classList.add("hide");
-  btnLogout.classList.remove("hide");
+  linkLogin?.classList.add("hide");
+  linkLogout?.classList.remove("hide");
 
   const user = await auth0Client.getUser();
-  const name = user?.name || user?.email || "Adhérent";
-  welcome.textContent = `Bonjour ${name}`;
+  welcome.textContent = `Bonjour ${user?.name || user?.email || "Adhérent"}`;
 
-  // Rôles
   const idTokenClaims = await auth0Client.getIdTokenClaims();
   const roles = (idTokenClaims?.[ROLES_CLAIM] || []).map(r => String(r).toLowerCase());
-  const hasAnyRole = Array.isArray(roles) && roles.length > 0;
+  const hasAnyRole = roles.length > 0;
 
   if (hasAnyRole) {
-    // ✅ Fieldset 1 & 2 visibles si ≥1 rôle
     fsGen.classList.remove("hide");
     fsRoles.classList.remove("hide");
-    document.getElementById("no-role").classList.add("hide");
+    noRole.classList.add("hide");
     filterRoleCards(roles);
   } else {
-    // Connecté sans rôle → pas de fieldset, proposer “Demander l’accès”
     fsGen.classList.add("hide");
     fsRoles.classList.add("hide");
     noRole.classList.remove("hide");
   }
 }
+
 
 function filterRoleCards(userRoles) {
   const userSet = new Set(userRoles.map(r => r.trim().toLowerCase()));

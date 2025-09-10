@@ -27,23 +27,25 @@
 <body>
   <header class="hero">
     <br><br><br><br><br><br><br>
-    <nav>
-      <a href="/Index.html">Accueil</a>
-      <a href="/Activites.html">Nos unités</a>
-      <a href="/adherents/index.html">Espace adhérents</a>
-      <a href="/preinscriptions.html">Pré-Inscriptions</a>
-      <a href="#" id="link-login" class="button">Se connecter</a>
-      <a href="#" id="link-logout" class="button secondary">Se déconnecter</a>
-    </nav>
+<nav class="topnav">
+  <div class="left">
+    <a href="/Index.html">Accueil</a>
+    <a href="/Activites.html">Nos unités</a>
+    <a href="/adherents/">Espace adhérents</a>
+    <a href="/preinscriptions.html">Pré-Inscriptions</a>
+  </div>
+
+  <div class="right">
+    <a href="#" id="link-login"  class="button">Se connecter</a>
+    <a href="#" id="link-logout" class="button secondary hide">Se déconnecter</a>
+  </div>
+</nav>
 
   </header>
 
   <main class="container">
     <!-- Boutons pilotés par auth.js -->
-    <div style="text-align:right; margin-bottom:1rem;">
-      <button id="btn-login" class="btn primary">Se connecter</button>
-      <button id="btn-logout" class="btn hide">Se déconnecter</button>
-    </div>
+
 
     <!-- Visiteur non connecté -->
     <section id="guest">

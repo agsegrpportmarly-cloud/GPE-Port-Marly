@@ -135,3 +135,9 @@ footer img {
       font-weight: 600;
     }
 
+.topnav{display:flex; align-items:center; gap:1rem; padding:0 1rem;}
+.topnav .left{display:flex; gap:1rem; flex:1 1 auto;}
+.topnav .right{margin-left:auto; display:flex; gap:.5rem; align-items:center;}
+.button{padding:.4rem .8rem; border:1px solid #ccc; border-radius:.6rem; background:#043956; color:#fff;}
+.button.secondary{background:transparent; color:#043956;}
+.hide{display:none;}
