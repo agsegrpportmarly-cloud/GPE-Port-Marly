@@ -1,0 +1,143 @@
+let auth0Client = null;
+
+// === Paramètres à ADAPTER à ton tenant Auth0 ===
+const AUTH0_DOMAIN    = "<ton-domaine>.eu.auth0.com";
+const AUTH0_CLIENT_ID = "<ton-client-id>";
+const AUTH0_AUDIENCE  = undefined; // si pas d'API
+const ROLES_CLAIM     = "https://pmarly/roles"; // ex: ["chef","tresorier","admin"]
+
+document.addEventListener("DOMContentLoaded", initAuth);
+
+async function initAuth() {
+  auth0Client = await createAuth0Client({
+    domain: AUTH0_DOMAIN,
+    clientId: AUTH0_CLIENT_ID,
+    authorizationParams: {
+      redirect_uri: window.location.origin + "/adherents/",
+      audience: AUTH0_AUDIENCE
+    },
+    cacheLocation: "localstorage"
+  });
+
+  // Callback (code/state)
+  if (window.location.search.includes("code=") && window.location.search.includes("state=")) {
+    try {
+      await auth0Client.handleRedirectCallback();
+      window.history.replaceState({}, document.title, "/adherents/");
+    } catch (e) {
+      console.error("Callback error:", e);
+    }
+  }
+
+  bindUi();
+  await render();
+}
+
+function bindUi() {
+  document.getElementById("btn-login")?.addEventListener("click", login);
+  document.getElementById("btn-logout")?.addEventListener("click", logout);
+  document.getElementById("btn-request-access")?.addEventListener("click", requestAccess);
+}
+
+async function render() {
+  const isAuthenticated = await auth0Client.isAuthenticated();
+
+  const guest   = document.getElementById("guest");
+  const app     = document.getElementById("app");
+  const noRole  = document.getElementById("no-role");
+  const fsGen   = document.getElementById("fs-general");
+  const fsRoles = document.getElementById("fs-roles");
+
+  const btnLogin  = document.getElementById("btn-login");
+  const btnLogout = document.getElementById("btn-logout");
+  const welcome   = document.getElementById("welcome");
+
+  if (!isAuthenticated) {
+    // Non connecté
+    guest.classList.remove("hide");
+    app.classList.add("hide");
+    noRole.classList.add("hide");
+    fsGen.classList.add("hide");
+    fsRoles.classList.add("hide");
+
+    btnLogin.classList.remove("hide");
+    btnLogout.classList.add("hide");
+    return;
+  }
+
+  // Connecté
+  guest.classList.add("hide");
+  app.classList.remove("hide");
+
+  btnLogin.classList.add("hide");
+  btnLogout.classList.remove("hide");
+
+  const user = await auth0Client.getUser();
+  const name = user?.name || user?.email || "Adhérent";
+  welcome.textContent = `Bonjour ${name}`;
+
+  // Rôles
+  const idTokenClaims = await auth0Client.getIdTokenClaims();
+  const roles = (idTokenClaims?.[ROLES_CLAIM] || []).map(r => String(r).toLowerCase());
+  const hasAnyRole = Array.isArray(roles) && roles.length > 0;
+
+  if (hasAnyRole) {
+    // ✅ Fieldset 1 & 2 visibles si ≥1 rôle
+    fsGen.classList.remove("hide");
+    fsRoles.classList.remove("hide");
+    document.getElementById("no-role").classList.add("hide");
+    filterRoleCards(roles);
+  } else {
+    // Connecté sans rôle → pas de fieldset, proposer “Demander l’accès”
+    fsGen.classList.add("hide");
+    fsRoles.classList.add("hide");
+    noRole.classList.remove("hide");
+  }
+}
+
+function filterRoleCards(userRoles) {
+  const userSet = new Set(userRoles.map(r => r.trim().toLowerCase()));
+  document.querySelectorAll('#role-cards .card').forEach(card => {
+    const need = (card.getAttribute('data-roles') || "")
+      .split(",")
+      .map(r => r.trim().toLowerCase())
+      .filter(Boolean);
+    const visible = need.length === 0 || need.some(n => userSet.has(n));
+    card.style.display = visible ? "" : "none";
+  });
+}
+
+async function login() {
+  await auth0Client.loginWithRedirect({
+    authorizationParams: { redirect_uri: window.location.origin + "/adherents/" }
+  });
+}
+
+async function logout() {
+  await auth0Client.logout({
+    logoutParams: { returnTo: window.location.origin + "/" }
+  });
+}
+
+async function requestAccess() {
+  try {
+    const user = await auth0Client.getUser();
+    const email = user?.email || "";
+    const name  = user?.name || "";
+    const subject = `Demande d'accès – ${name || email}`;
+    const body =
+`Bonjour,
+
+Je souhaite obtenir un rôle d’accès à l’espace adhérents.
+Nom: ${name}
+Email: ${email}
+
+Rôle(s) demandé(s): (préciser)
+
+Merci !`;
+    const mailto = `mailto:agse.grp.portmarly@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    window.location.href = mailto;
+  } catch {
+    window.location.href = "mailto:agse.grp.portmarly@gmail.com?subject=Demande%20d%27accès%20Espace%20adhérents";
+  }
+}

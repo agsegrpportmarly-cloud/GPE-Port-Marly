@@ -17,6 +17,7 @@ const RULES = [
   { prefix: "/adherents/troupe 3 PM/",   role: "T3PM" },
   { prefix: "/adherents/feu/",           role: "FDNJ" },
   { prefix: "/adherents/clan/",          role: "CSG" },
+  { prefix: "/adherents/",               role: "admin" },
 ];
 
 

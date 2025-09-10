@@ -1,22 +1,22 @@
 <!doctype html>
 <html lang="fr">
-   <div class="layout">
 <head>
   <meta charset="utf-8">
   <title>Espace adhérents – Port-Marly</title>
   <meta name="viewport" content="width=device-width,initial-scale=1">
-  <!-- CSS à la racine -->
+
   <link rel="stylesheet" href="../Style.css">
   <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
 
-  <!-- Firebase (tu peux retirer si plus nécessaire) -->
-  <script defer src="https://www.gstatic.com/firebasejs/10.12.3/firebase-app-compat.js"></script>
-  <script defer src="https://www.gstatic.com/firebasejs/10.12.3/firebase-auth-compat.js"></script>
+  <!-- Auth0 SPA SDK (front) -->
+  <script defer src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js"></script>
+  <!-- Logique d’auth/affichage -->
+  <script defer src="./auth.js"></script>
 
   <style>
     .container{max-width:1100px;margin:0 auto;padding:24px}
-    .btn{padding:.6rem 1rem;border:1px solid #ccc;border-radius:.6rem;background:#043956;cursor:pointer}
-    .btn.primary{border-color:#005c84;background:#005c84;color:#fff}
+    .btn{padding:.6rem 1rem;border:1px solid #ccc;border-radius:.6rem;background:#043956;cursor:pointer;color:#fff}
+    .btn.primary{border-color:#005c84;background:#005c84}
     .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;margin-top:2rem}
     .card{border:1px solid #e5e7eb;border-radius:16px;padding:18px;background:#fff;box-shadow:0 2px 8px rgba(0,0,0,.06)}
     .muted{color:#6b7280}
@@ -25,138 +25,115 @@
   </style>
 </head>
 <body>
-  <!-- Ton header existant -->
   <header class="hero">
     <br><br><br><br><br><br><br>
     <nav>
-  <a href="/Index.html">Accueil</a>
-  <a href="/Activites.html">Nos unités</a>
-  <a href="/adherents/index.html">Espace adhérents</a>
-  <a href="/preinscriptions.html">Pré-Inscriptions</a>
+      <a href="/Index.html">Accueil</a>
+      <a href="/Activites.html">Nos unités</a>
+      <a href="/adherents/index.html">Espace adhérents</a>
+      <a href="/preinscriptions.html">Pré-Inscriptions</a>
     </nav>
-<nav class="auth-nav" style="display:flex; gap:10px; justify-content:flex-end; padding: 0 1rem;">
-  <a href="/login" class="button">Se connecter</a>
-  <a href="/logout" class="button secondary">Se déconnecter</a>
-</nav>
+    <nav class="auth-nav" style="display:flex; gap:10px; justify-content:flex-end; padding: 0 1rem;">
+      <a href="/login" class="button">Se connecter</a>
+      <a href="/logout" class="button secondary">Se déconnecter</a>
+    </nav>
   </header>
 
   <main class="container">
+    <!-- Boutons pilotés par auth.js -->
     <div style="text-align:right; margin-bottom:1rem;">
       <button id="btn-login" class="btn primary">Se connecter</button>
       <button id="btn-logout" class="btn hide">Se déconnecter</button>
     </div>
 
-    <!-- État : non connecté -->
+    <!-- Visiteur non connecté -->
     <section id="guest">
-      <p class="muted">Connectez-vous pour accéder aux sections.</p>
+      <p class="muted"><b>Section réservée aux adhérents.</b> Merci de vous connecter.</p>
     </section>
 
-    <!-- État : connecté -->
-    
+    <!-- Connecté sans rôle -->
+    <section id="no-role" class="hide">
+      <p class="muted">Vous êtes connecté mais vous n’avez pas encore d’accès.</p>
+      <button id="btn-request-access" class="btn">Demander l’accès</button>
+    </section>
+
+    <!-- Connecté (avec rendu selon rôles) -->
     <section id="app" class="hide">
       <p class="muted" id="welcome"></p>
-       <fieldset>
-        <legend>Administratif</legend>
-      <div class="grid">
-        <a class="card" href="https://inscriptions-district-sgl.web.app/formulaire-inscription.html?type=jeune" target="_blank" >
-          
-          <img src="../images/folder.png" alt="inscription" style="width:100%;border-radius:8px"><h3>Dossier d'inscription</h3>
-          
-        </a>
-        <a class="card" href="/adherents/chefs.html">
-          <img src="../images/camp.png" alt="camp" style="width:100%;border-radius:8px">
-          <h3>Dossier d'inscriptions Camps</h3> 
-          
-        </a>
-        <a class="card" href="/adherents/dossiers.html">
-          <img src="../images/calendar.png" alt="agenda" style="width:100%;border-radius:8px">
-          <h3>Agenda</h3>
-        </a>
 
-      </div>
+      <!-- Fieldset 1 : Administratif — visible UNIQUEMENT si l’utilisateur a ≥1 rôle -->
+      <fieldset id="fs-general" class="hide">
+        <legend>Administratif</legend>
+        <div class="grid">
+          <a class="card" href="https://inscriptions-district-sgl.web.app/formulaire-inscription.html?type=jeune" target="_blank">
+            <img src="../images/folder.png" alt="inscription" style="width:100%;border-radius:8px">
+            <h3>Dossier d'inscription</h3>
+          </a>
+          <a class="card" href="/adherents/chefs.html">
+            <img src="../images/camp.png" alt="camp" style="width:100%;border-radius:8px">
+            <h3>Dossier d'inscriptions Camps</h3>
+          </a>
+          <a class="card" href="/adherents/dossiers.html">
+            <img src="../images/calendar.png" alt="agenda" style="width:100%;border-radius:8px">
+            <h3>Agenda</h3>
+          </a>
+        </div>
       </fieldset>
+
       <br>
-      <fieldset>
+
+      <!-- Fieldset 2 : Les unités — visible si ≥1 rôle, filtrage possible via data-roles -->
+      <fieldset id="fs-roles" class="hide">
         <legend>Les unités</legend>
-            <div class="grid">
-        <a class="card" href="/PM/adherents/meute 1PM/index.html">
-          <h3>Meute 1ère <br>Port Marly</h3>
-          <p>Accéder à la page de l'unité.</p>
-        </a>
-        <a class="card" href="/PM/adherents/meute 3PM/index.html">
-          <h3>Meute 3ème <br>Port Marly</h3>
-          <p>Accéder à la page de l'unité.</p>
-        </a>
-        <a class="card" href="/PM/adherents/clairiere 2PM/index.html">
-          <h3>Clairière 2ème <br>Port Marly</h3>
-          <p>Accéder à la page de l'unité.</p>
-        </a>
-        <a class="card" href="/PM/adherents/clairiere 4PM/index.html">
-          <h3>Clairière 4ème <br>Port Marly</h3>
-          <p>Accéder à la page de l'unité.</p>
-        </a>
-          <a class="card" href="/PM/adherents/troupe 1 PM/index.html">
-          <h3>Troupe 1ère <br>Port Marly</h3>
-          <p>Accéder à la page de l'unité.</p>
-        </a>
-          <a class="card" href="/PM/adherents/troupe 3 PM/index.html">
-          <h3>Troupe 3ème <br>Port Marly</h3>
-          <p>Accéder à la page de l'unité.</p>
-        </a>
-          <a class="card" href="/PM/adherents/compagnie 2PM/index.html">
-          <h3>Compagnie 2ème <br>Port Marly</h3>
-          <p>Accéder à la page de l'unité.</p>
-        </a>
-          <a class="card" href="/PM/adherents/compagnie 4PM/index.html">
-          <h3>Compagnie 4ème <br>Port Marly</h3>
-          <p>Accéder à la page de l'unité.</p>
-        </a>
-          <a class="card" href="/PM/adherents/Feu/index.html">
-          <h3>Feu<br>Port Marly</h3>
-          <p>Accéder à la page de l'unité.</p>
-        </a>
-          <a class="card" href="/PM/adherents/clan/index.html">
-          <h3>Clan <br>Port Marly</h3>
-          <p>Accéder à la page de l'unité.</p>
-        </a>
-      </div>
+        <div class="grid" id="role-cards">
+          <!-- Par défaut : rôles “chef,admin”. Adapte selon ton mapping réel -->
+          <a class="card" href="/PM/adherents/meute 1PM/index.html" data-roles="M1PM,admin">
+            <h3>Meute 1ère <br>Port Marly</h3>
+            <p>Accéder à la page de l'unité.</p>
+          </a>
+          <a class="card" href="/PM/adherents/meute 3PM/index.html" data-roles="M3PM,admin">
+            <h3>Meute 3ème <br>Port Marly</h3>
+            <p>Accéder à la page de l'unité.</p>
+          </a>
+          <a class="card" href="/PM/adherents/clairiere 2PM/index.html" data-roles="C2PM,admin">
+            <h3>Clairière 2ème <br>Port Marly</h3>
+            <p>Accéder à la page de l'unité.</p>
+          </a>
+          <a class="card" href="/PM/adherents/clairiere 4PM/index.html" data-roles="C4PM,admin">
+            <h3>Clairière 4ème <br>Port Marly</h3>
+            <p>Accéder à la page de l'unité.</p>
+          </a>
+          <a class="card" href="/PM/adherents/troupe 1 PM/index.html" data-roles="T1PM,admin">
+            <h3>Troupe 1ère <br>Port Marly</h3>
+            <p>Accéder à la page de l'unité.</p>
+          </a>
+          <a class="card" href="/PM/adherents/troupe 3 PM/index.html" data-roles="T3PM,admin">
+            <h3>Troupe 3ème <br>Port Marly</h3>
+            <p>Accéder à la page de l'unité.</p>
+          </a>
+          <a class="card" href="/PM/adherents/compagnie 2PM/index.html" data-roles="CI2PM,admin">
+            <h3>Compagnie 2ème <br>Port Marly</h3>
+            <p>Accéder à la page de l'unité.</p>
+          </a>
+          <a class="card" href="/PM/adherents/compagnie 4PM/index.html" data-roles="CI4PM,admin">
+            <h3>Compagnie 4ème <br>Port Marly</h3>
+            <p>Accéder à la page de l'unité.</p>
+          </a>
+          <a class="card" href="/PM/adherents/Feu/index.html" data-roles="FNDJ,admin">
+            <h3>Feu<br>Port Marly</h3>
+            <p>Accéder à la page de l'unité.</p>
+          </a>
+          <a class="card" href="/PM/adherents/clan/index.html" data-roles="CSG,admin">
+            <h3>Clan <br>Port Marly</h3>
+            <p>Accéder à la page de l'unité.</p>
+          </a>
+        </div>
       </fieldset>
     </section>
   </main>
+
   <footer>
     © AGSE – Groupes de Port-Marly <img src="../images/Logo_GS.png" alt="Logo AGSE" width="120" height="auto">
   </footer>
- <script>
-    // Exemple minimal d'intégration boutons (à remplacer par votre logique d'auth réelle)
-    const loginBtn = document.getElementById('loginBtn');
-    const logoutBtn = document.getElementById('logoutBtn');
-    const search = document.getElementById('search');
-
-    // Simule un état d'auth (à brancher sur Netlify/Auth0 ensuite)
-    let isAuthenticated = false;
-
-    function renderAuth(){
-      if (isAuthenticated){
-        loginBtn.classList.add('hidden');
-        logoutBtn.classList.remove('hidden');
-        search.classList.remove('hidden');
-        // Débloquer les tuiles qui nécessitent une session
-        document.querySelectorAll('.tile[aria-disabled="true"]').forEach(el=>el.removeAttribute('aria-disabled'));
-      } else {
-        loginBtn.classList.remove('hidden');
-        logoutBtn.classList.add('hidden');
-        search.classList.add('hidden');
-        // Re-bloquer les rubriques privées
-        // (si vous préférez cacher, remplacez par el.classList.add('hidden'))
-        document.querySelectorAll('.tiles a').forEach((el, i)=>{
-          if ([2,3,6,7].includes(i)) el.setAttribute('aria-disabled','true');
-        });
-      }
-    }
-    renderAuth();
-
-    loginBtn.addEventListener('click', ()=>{ isAuthenticated = true; renderAuth(); });
-    logoutBtn.addEventListener('click', ()=>{ isAuthenticated = false; renderAuth(); });
-  </script>
 </body>
 </html>
