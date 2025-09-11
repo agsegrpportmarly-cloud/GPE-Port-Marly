@@ -10,7 +10,6 @@
     :root{--bleu:#005C84;--bleu2:#043956;--fond:#0b2940;--gris:#eef2f4;--blanc:#fff;--radius:18px;--shadow:0 14px 40px rgba(0,0,0,.22);--maxw:1200px;--gap:18px}
     *{box-sizing:border-box}
     html,body{margin:0;font-family:"Libre Baskerville",serif;background:var(--fond);color:#f6f9fc}
-    header img{width:100%;height:auto;display:block}
     .wrap{max-width:var(--maxw);margin:24px auto;padding:0 24px}
     .card{background:linear-gradient(180deg,#f3f7fa 0%, #e9f1f6 100%);color:#0f2332;border-radius:var(--radius);box-shadow:var(--shadow);padding:28px}
     h1{margin:0 0 10px;font-size:28px}.muted{opacity:.85;margin-top:0}
@@ -44,21 +43,16 @@
   </style>
 </head>
 <body>
-  <header class="hero">
-    <br>
-    <br>
-    <br>
-    <br>    
-    <br>
-    <br>    
-    <br>
-<nav>
-  <a href="/Index.html">Accueil</a>
-  <a href="/Activites.html">Nos unités</a>
-  <a href="/adherents/index.html">Espace adhérents</a>
-  <a href="/preinscriptions.html">Pré-Inscriptions</a>
-</nav>
-  </header>
+<header class="hero" id="header_PM">
+  <div class="overlay">
+    <nav class="container">
+      <a href="/Index.html">Accueil</a>
+      <a href="/Activites.html">Nos unités</a>
+      <a href="/adherents/index.html">Espace adhérents</a>
+      <a href="/preinscriptions.html">Pré-Inscriptions</a>
+    </nav>
+  </div>
+</header>
 
   <div class="wrap">
     <div class="card">

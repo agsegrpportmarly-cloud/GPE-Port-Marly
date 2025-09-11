@@ -16,9 +16,11 @@ header.hero{
   background:var(--bleu) url("Header_PM.png") center/cover no-repeat;
   color:var(--blanc);
 }
-header.hero .overlay{
-  background:rgba(0,0,0,.25);
-  padding:28px 16px;
+header.hero {
+  background: var(--bleu) url("Header_PM.png") center center no-repeat;
+  background-size: contain; /* conserve l’image entière */
+  color: var(--blanc);
+  text-align: center;
 }
 /* Couleur du contour des liens du menu dans le header */
 #header_PM {
