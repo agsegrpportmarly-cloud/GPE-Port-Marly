@@ -1,28 +1,25 @@
-/* /auth.js — version robuste : charge le SDK elle-même + bouton garanti */
+/* /auth.js — charge le SDK Auth0 avec multiples fallbacks + statut visuel */
 (() => {
   const CFG = {
-    domain: 'YOUR_AUTH0_DOMAIN',          // ex: dev-xxxxx.eu.auth0.com
-    clientId: 'YOUR_AUTH0_CLIENT_ID',
-    redirectPath: '/adherents/',          // page de retour après login
-    rolesClaim: 'https://pmarly/roles'    // claim custom des rôles
+    domain: 'dev-zl3rulx7tauw5f4h.us.auth0.com',       // ex: dev-xxxxx.eu.auth0.com
+    clientId: 'etdVdsWZQSoyQtrNdUKDRxytmXM4cZFL',
+    redirectPath: '/adherents/',
+    rolesClaim: 'https://pmarly/roles'
   };
+
+  const SDK_URLS = [
+    'https://cdn.auth0.com/js/auth0-spa-js/2.4/auth0-spa-js.production.js',
+    'https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js',
+    'https://cdn.jsdelivr.net/npm/@auth0/auth0-spa-js@2/dist/auth0-spa-js.production.js',
+    'https://unpkg.com/@auth0/auth0-spa-js@2/dist/auth0-spa-js.production.js'
+  ];
 
   let auth0Client = null;
 
-  // ---------- Utils DOM ----------
-  const $ = (sel) => document.querySelector(sel);
-  const show = (id, on = true) => {
-    const el = document.getElementById(id);
-    if (el) el.classList.toggle('hide', !on);
-  };
-  const on = (el, ev, fn) => el && el.addEventListener(ev, fn);
-
-  // ---------- Bouton & style : toujours injectés ----------
+  // ---------- UI helpers ----------
   function injectStyle() {
     if (document.getElementById('auth-cta-style')) return;
-    const style = document.createElement('style');
-    style.id = 'auth-cta-style';
-    style.textContent = `
+    const css = `
       #auth-cta{
         position:fixed; top:12px; right:12px; z-index:9999;
         display:inline-block; padding:.45rem .9rem; border-radius:999px; font-weight:700;
@@ -31,8 +28,17 @@
       }
       #auth-cta[aria-disabled="true"]{ opacity:.6; cursor:not-allowed; }
       #auth-cta:hover{ background:rgba(0,0,0,.5); }
+      #auth-status{
+        position:fixed; top:54px; right:16px; z-index:9999;
+        padding:.25rem .5rem; border-radius:6px; font-size:12px;
+        background:rgba(0,0,0,.35); color:#fff; border:1px solid rgba(255,255,255,.4);
+        backdrop-filter:blur(4px);
+      }
     `;
-    document.head.appendChild(style);
+    const s = document.createElement('style');
+    s.id = 'auth-cta-style';
+    s.textContent = css;
+    document.head.appendChild(s);
   }
 
   function ensureCta() {
@@ -58,50 +64,81 @@
     }
   }
 
-  // ---------- Charge le SDK Auth0 (primaire + fallback) ----------
-  function loadScript(src) {
+  function setStatus(text) {
+    let el = document.getElementById('auth-status');
+    if (!el) {
+      el = document.createElement('div');
+      el.id = 'auth-status';
+      document.body.appendChild(el);
+    }
+    el.textContent = text;
+  }
+
+  // ---------- DOM utils ----------
+  const show = (id, on = true) => {
+    const el = document.getElementById(id);
+    if (el) el.classList.toggle('hide', !on);
+  };
+
+  // ---------- Script loader with timeout ----------
+  function loadScript(src, timeoutMs = 6000) {
     return new Promise((resolve, reject) => {
+      const t = setTimeout(() => reject(new Error('timeout')), timeoutMs);
       const s = document.createElement('script');
       s.src = src;
-      s.onload = resolve;
-      s.onerror = reject;
+      s.onload = () => { clearTimeout(t); resolve(); };
+      s.onerror = (e) => { clearTimeout(t); reject(e); };
       document.head.appendChild(s);
     });
   }
 
   async function loadAuth0Sdk() {
-    if (typeof window.createAuth0Client === 'function') return;
-    try {
-      await loadScript('https://cdn.auth0.com/js/auth0-spa-js/2.4/auth0-spa-js.production.js');
-    } catch {
-      // Fallback CDN
-      await loadScript('https://cdn.jsdelivr.net/npm/@auth0/auth0-spa-js@2.4.3/dist/auth0-spa-js.production.js');
+    if (typeof window.createAuth0Client === 'function') return true;
+
+    // Alerte file://
+    if (location.protocol === 'file:') {
+      setStatus('file:// non supporté — lance un serveur (ex: Netlify dev)');
+      return false;
     }
+
+    for (const url of SDK_URLS) {
+      try {
+        setStatus('Chargement SDK…');
+        await loadScript(url, 7000);
+        if (typeof window.createAuth0Client === 'function') {
+          setStatus('SDK OK');
+          return true;
+        }
+      } catch (e) {
+        console.warn('Échec SDK via', url, e);
+      }
+    }
+
+    // Si on arrive ici : probablement CSP ou réseau
+    // Indice CSP dans la console : "Refused to load the script ..."
+    setStatus('SDK bloqué (CSP ? réseau ?)');
+    setCta('Se connecter (indispo)', { disabled: true });
+    return false;
   }
 
-  // ---------- Rendu selon état / rôles ----------
+  // ---------- Rôles / rendu ----------
   function applyRoleVisibility(roles) {
-    const hasAnyRole = Array.isArray(roles) && roles.length > 0;
-
-    // Sections facultatives : on ne plante pas si absentes
-    show('guest', !hasAnyRole);
+    const hasAny = Array.isArray(roles) && roles.length > 0;
+    show('guest', !hasAny);
     show('no-role', Array.isArray(roles) && roles.length === 0);
-    show('app', hasAnyRole);
+    show('app', hasAny);
 
-    // Filtrer les cartes d'unités
-    const container = document.getElementById('role-cards');
-    if (container && hasAnyRole) {
-      const roleSet = new Set(roles.map(r => String(r).trim()));
-      container.querySelectorAll('.card').forEach(card => {
-        const needed = (card.getAttribute('data-roles') || '')
+    const rc = document.getElementById('role-cards');
+    if (rc && hasAny) {
+      const R = new Set(roles.map(r => String(r).trim()));
+      rc.querySelectorAll('.card').forEach(card => {
+        const need = (card.getAttribute('data-roles') || '')
           .split(',').map(s => s.trim()).filter(Boolean);
-        const visible = needed.length === 0 || needed.some(r => roleSet.has(r));
+        const visible = need.length === 0 || need.some(r => R.has(r));
         card.style.display = visible ? '' : 'none';
       });
     }
-
-    // Afficher les fieldsets si on a des rôles
-    if (hasAnyRole) {
+    if (hasAny) {
       document.getElementById('fs-general')?.classList.remove('hide');
       document.getElementById('fs-roles')?.classList.remove('hide');
     }
@@ -112,28 +149,20 @@
 
     if (!isAuth) {
       setCta('Se connecter', {
-        disabled: false,
         handler: async () => {
           await auth0Client.loginWithRedirect({
-            authorizationParams: {
-              redirect_uri: window.location.origin + CFG.redirectPath
-            },
+            authorizationParams: { redirect_uri: window.location.origin + CFG.redirectPath },
             appState: { targetUrl: CFG.redirectPath }
           });
         }
       });
-      // Visiteur par défaut
       show('guest', true); show('no-role', false); show('app', false);
       return;
     }
 
-    // Authentifié
     setCta('Se déconnecter', {
-      disabled: false,
       handler: async () => {
-        await auth0Client.logout({
-          logoutParams: { returnTo: window.location.origin }
-        });
+        await auth0Client.logout({ logoutParams: { returnTo: window.location.origin } });
       }
     });
 
@@ -141,24 +170,16 @@
     const welcome = document.getElementById('welcome');
     if (welcome) welcome.textContent = `Bonjour ${user?.name || user?.email || 'adhérent'} !`;
 
-    const roles =
-      user?.[CFG.rolesClaim] ||
-      user?.roles ||
-      [];
-
+    const roles = user?.[CFG.rolesClaim] || user?.roles || [];
     applyRoleVisibility(Array.isArray(roles) ? roles : []);
   }
 
   async function initAuth() {
-    // 1) Charger le SDK si besoin
-    await loadAuth0Sdk();
-    if (typeof window.createAuth0Client !== 'function') {
-      console.error('Auth0 SDK non chargé');
-      setCta('Se connecter (indispo)', { disabled: true });
-      return;
-    }
+    // 1) SDK
+    const ok = await loadAuth0Sdk();
+    if (!ok) return;
 
-    // 2) Créer le client
+    // 2) Client
     auth0Client = await createAuth0Client({
       domain: CFG.domain,
       clientId: CFG.clientId,
@@ -169,33 +190,33 @@
       }
     });
 
-    // 3) Gérer le callback ?code=&state= si présent
-    const params = new URLSearchParams(window.location.search);
-    if (params.has('code') && params.has('state')) {
+    // 3) Callback
+    const p = new URLSearchParams(location.search);
+    if (p.has('code') && p.has('state')) {
       try {
         const { appState } = await auth0Client.handleRedirectCallback();
-        // Nettoyer l’URL puis rediriger vers la cible
-        window.history.replaceState({}, document.title, window.location.pathname);
-        window.location.replace(appState?.targetUrl || CFG.redirectPath);
-        return; // on laisse la page de destination refaire son init
-      } catch (err) {
-        console.error('Erreur callback Auth0:', err);
+        history.replaceState({}, document.title, location.pathname);
+        location.replace(appState?.targetUrl || CFG.redirectPath);
+        return;
+      } catch (e) {
+        console.error('Callback Auth0', e);
+        setStatus('Erreur callback');
       }
     }
 
-    // 4) Rendu
+    // 4) UI
     await renderUI();
   }
 
-  // ---------- Boot ----------
   document.addEventListener('DOMContentLoaded', async () => {
     injectStyle();
-    ensureCta();                 // bouton visible dès le départ
-    setCta('Connexion…', { disabled: true }); // bloqué le temps de l’init
+    ensureCta();
+    setCta('Connexion…', { disabled: true });
     try {
       await initAuth();
     } catch (e) {
-      console.error('Init Auth – erreur:', e);
+      console.error('Init Auth erreur', e);
+      setStatus('Init erreur');
       setCta('Se connecter (indispo)', { disabled: true });
     }
   });
