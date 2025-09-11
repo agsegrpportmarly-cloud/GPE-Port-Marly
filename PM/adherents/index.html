@@ -18,13 +18,15 @@
     .hide{display:none}
     nav a{margin-right:1rem}
   </style>
-  <meta http-equiv="Content-Security-Policy"
-      content="default-src 'self';
-               script-src 'self' https://cdn.auth0.com https://cdn.jsdelivr.net https://unpkg.com;
-               connect-src 'self' https://*.auth0.com https://*.cloudfront.net https://cdn.auth0.com;
-               img-src 'self' data: https:;
-               style-src 'self' 'unsafe-inline' https:;
-               base-uri 'self'; frame-ancestors 'self'">
+<meta http-equiv="Content-Security-Policy"
+  content="default-src 'self';
+           script-src 'self' https://cdn.auth0.com https://cdn.jsdelivr.net https://unpkg.com;
+           connect-src 'self' https://*.auth0.com https://*.cloudfront.net https://cdn.auth0.com https://cdn.jsdelivr.net https://unpkg.com;
+           img-src 'self' data: https:;
+           style-src 'self' 'unsafe-inline' https:;
+           font-src 'self' https: data:;
+           frame-ancestors 'self'; base-uri 'self'">
+
 <script defer src="../auth.js"></script>
 </head>
 <body>
