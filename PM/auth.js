@@ -1,8 +1,8 @@
 /* /PM/auth.js — auto-prefix (PM ou racine), self-host du SDK, bouton garanti */
 (() => {
   const CFG = {
-    domain: 'dev-zl3rulx7tauw5f4h.us.auth0.com',       // ex: dev-xxxxx.eu.auth0.com
-    clientId: 'etdVdsWZQSoyQtrNdUKDRxytmXM4cZFL',
+    domain: 'YOUR_AUTH0_DOMAIN',       // ex: dev-xxxxx.eu.auth0.com
+    clientId: 'YOUR_AUTH0_CLIENT_ID',
     rolesClaim: 'https://pmarly/roles'
   };
 
@@ -95,3 +95,37 @@
       show('guest',true); show('no-role',false); show('app',false);
       return;
     }
+    setBtn('Se déconnecter',{onClick:async()=>{
+      await auth0Client.logout({ logoutParams:{ returnTo: window.location.origin } });
+    }});
+    const user=await auth0Client.getUser();
+    const w=document.getElementById('welcome'); if(w) w.textContent=`Bonjour ${user?.name||user?.email||'adhérent'} !`;
+    const roles = user?.[CFG.rolesClaim] || user?.roles || [];
+    applyRoles(Array.isArray(roles)?roles:[]);
+  }
+
+  async function init(){
+    const ok=await loadSdk(); if(!ok) return;
+    auth0Client = await createAuth0Client({
+      domain: CFG.domain, clientId: CFG.clientId,
+      cacheLocation:'localstorage', useRefreshTokens:true,
+      authorizationParams:{ redirect_uri: window.location.origin + REDIRECT_PATH }
+    });
+
+    const p=new URLSearchParams(location.search);
+    if(p.has('code') && p.has('state')){
+      try{
+        const { appState } = await auth0Client.handleRedirectCallback();
+        history.replaceState({}, document.title, location.pathname);
+        location.replace(appState?.targetUrl || REDIRECT_PATH);
+        return;
+      }catch(e){ console.error('Callback Auth0', e); status('Erreur callback'); }
+    }
+    await render();
+  }
+
+  document.addEventListener('DOMContentLoaded', async ()=>{
+    injectCss(); ensureBtn(); setBtn('Connexion…',{disabled:true});
+    try{ await init(); }catch(e){ console.error('Init Auth', e); status('Init erreur'); setBtn('Se connecter (indispo)', {disabled:true}); }
+  });
+})();
