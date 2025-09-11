@@ -1,8 +1,8 @@
 /* /PM/auth.js — charge le SDK depuis /PM/vendor/ automatiquement */
 (() => {
   const CFG = {
-    domain: 'YOUR_AUTH0_DOMAIN',       // ex: dev-xxxxx.eu.auth0.com
-    clientId: 'YOUR_AUTH0_CLIENT_ID',
+    domain: 'dev-zl3rulx7tauw5f4h.us.auth0.com',       // ex: dev-xxxxx.eu.auth0.com
+    clientId: 'etdVdsWZQSoyQtrNdUKDRxytmXM4cZFL',
     redirectPath: '/adherents/',
     rolesClaim: 'https://pmarly/roles'
   };
