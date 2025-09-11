@@ -1,10 +1,10 @@
 /* /PM/auth.js — auto-prefix (PM ou racine), self-host du SDK, bouton garanti */
 (() => {
-  const CFG = {
-    domain: 'YOUR_AUTH0_DOMAIN',       // ex: dev-xxxxx.eu.auth0.com
-    clientId: 'YOUR_AUTH0_CLIENT_ID',
-    rolesClaim: 'https://pmarly/roles'
-  };
+const CFG = {
+  domain: 'dev-zl3rulx7tauw5f4h.us.auth0.com',        // ex: dev-xxxx.eu.auth0.com
+  clientId: 'etdVdsWZQSoyQtrNdUKDRxytmXM4cZFL',
+  rolesClaim: 'https://pmarly/roles'
+};
 
   // ===== Base path auto (ex: '/PM/' si le site est publié depuis ce dossier) =====
   const thisScript = document.currentScript || [...document.scripts].find(s => (s.src||'').includes('/auth.js'));
@@ -32,37 +32,29 @@
   const show=(id,on=true)=>{ const el=document.getElementById(id); if(el) el.classList.toggle('hide',!on); };
 
   // ---------- SDK local depuis le même dossier que auth.js (ex: /PM/vendor/...) ----------
-  function vendorCandidates(){
-    const out = new Set();
-    // Chemin basé sur auth.js
-    out.add(new URL('vendor/auth0-spa-js.production.js', baseUrl).href);   // /PM/vendor/...
-    // Relatif à la page (en secours)
-    out.add(new URL('../vendor/auth0-spa-js.production.js', window.location.href).href);
-    // Absolus possibles selon publish dir
-    out.add(window.location.origin + '/vendor/auth0-spa-js.production.js');
-    out.add(window.location.origin + '/PM/vendor/auth0-spa-js.production.js');
-    return [...out];
-  }
-  function loadScript(src, timeout=8000){
-    return new Promise((res,rej)=>{
-      const t=setTimeout(()=>rej(new Error('timeout')),timeout);
-      const s=document.createElement('script'); s.src=src;
-      s.onload=()=>{clearTimeout(t);res();};
-      s.onerror=(e)=>{clearTimeout(t);rej(e);};
-      document.head.appendChild(s);
-    });
-  }
-  async function loadSdk(){
-    if(typeof window.createAuth0Client==='function') return true;
-    if(location.protocol==='file:'){ status('file:// non supporté'); return false; }
-    for(const url of vendorCandidates()){
-      try{ status('Chargement SDK…'); await loadScript(url);
-        if(typeof window.createAuth0Client==='function'){ status('SDK OK'); return true; }
-      }catch(_){}
-    }
-    status('SDK introuvable (chemin local)'); setBtn('Se connecter (indispo)', {disabled:true}); return false;
-  }
+function vendorCandidates(){
+  const list = [
+    window.location.origin + '/PM/vendor/auth0-spa-js.production.js',
+    window.location.origin + '/vendor/auth0-spa-js.production.js',
+    new URL('../vendor/auth0-spa-js.production.js', window.location.href).href
+  ];
+  return list;
+}
 
+async function loadSdk(){
+  if (typeof window.createAuth0Client === 'function') return true;
+  if (location.protocol === 'file:') { status('file:// non supporté'); return false; }
+  for (const url of vendorCandidates()){
+    try{
+      status('Chargement SDK : ' + url);
+      await loadScript(url);
+      if (typeof window.createAuth0Client === 'function'){ status('SDK OK'); return true; }
+    }catch(e){ /* on essaie le suivant */ }
+  }
+  status('SDK introuvable (chemin local)');
+  setBtn('Se connecter (indispo)', {disabled:true});
+  return false;
+}
   // ---------- Rôles / affichage ----------
   function applyRoles(roles){
     const any=Array.isArray(roles)&&roles.length>0;
