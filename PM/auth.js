@@ -33,12 +33,12 @@ const CFG = {
 
   // ---------- SDK local depuis le même dossier que auth.js (ex: /PM/vendor/...) ----------
 function vendorCandidates(){
-  const list = [
-    window.location.origin + '/PM/vendor/auth0-spa-js.production.js',
-    window.location.origin + '/vendor/auth0-spa-js.production.js',
-    new URL('../vendor/auth0-spa-js.production.js', window.location.href).href
+  const root = window.location.origin;
+  return [
+    root + '/PM/vendor/auth0-spa-js.production.js',    // ton cas
+    root + '/vendor/auth0-spa-js.production.js',       // secours si PM est la racine publiée
+    new URL('../vendor/auth0-spa-js.production.js', window.location.href).href  // secours relatif
   ];
-  return list;
 }
 
 async function loadSdk(){
