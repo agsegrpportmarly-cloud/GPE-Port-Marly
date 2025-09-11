@@ -24,7 +24,7 @@ header.hero {
 }
 /* Couleur du contour des liens du menu dans le header */
 #header_PM {
-  --menu-stroke: rgb(0, 92, 132); /* mets ici la couleur dominante de ton image */
+  --menu-stroke: --bleu-fonce; /* mets ici la couleur dominante de ton image */
 }
 
 .container{max-width:var(--maxw);margin:0 auto;padding:0 16px}
