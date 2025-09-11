@@ -1,5 +1,9 @@
 <!doctype html>
 <html lang="fr">
+  <!-- SDK Auth0 (doit être chargé AVANT auth.js) -->
+<script defer src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js"></script>
+<!-- Script d'intégration (à la racine du site) -->
+<script defer src="/auth.js"></script>
 <head>
   <meta charset="utf-8">
   <title>Espace adhérents – Port-Marly</title>
@@ -7,13 +11,6 @@
 
   <link rel="stylesheet" href="../Style.css">
   <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
-
-  <!-- Auth0 SPA SDK (front) -->
-<script defer src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js"
-        onerror="var s=document.createElement('script');s.defer=true;s.src='https://cdn.jsdelivr.net/npm/@auth0/auth0-spa-js@2.1.4/dist/auth0-spa-js.production.js';document.head.appendChild(s);">
-</script>
-<script defer src="./auth.js"></script>
-
 
   <style>
     .container{max-width:1100px;margin:0 auto;padding:24px}
@@ -24,47 +21,10 @@
     .muted{color:#6b7280}
     .hide{display:none}
     nav a{margin-right:1rem}
-    /* Le header doit être positionné pour accueillir le bouton absolu */
-.hero { position: relative; }
-
-/* Container du bouton en haut-droite */
-.auth-float {
-  position: absolute;
-  top: 12px;
-  right: 12px;
-  z-index: 50;
-}
-
-/* Style du bouton – look discret sur image */
-.pill {
-  display: inline-block;
-  padding: .45rem .9rem;
-  border-radius: 999px;
-  font-weight: 600;
-  text-decoration: none;
-  border: 1px solid rgba(255,255,255,.6);
-  background: rgba(0,0,0,.35);
-  color: #fff;
-  backdrop-filter: blur(4px);
-  box-shadow: 0 2px 10px rgba(0,0,0,.25);
-}
-.pill:hover { background: rgba(0,0,0,.5); }
-
-/* Variante quand on est connecté (optionnel) */
-.pill.logout {
-  border-color: #005c84;
-  background: #005c84;
-}
-.pill.logout:hover { filter: brightness(1.05); }
-
   </style>
 </head>
 <body>
   <header class="hero">
-    <!-- Bouton flottant en haut à droite -->
-<div class="auth-float">
-  <a href="#" id="auth-cta" class="pill">Se connecter</a>
-</div>
     <br><br><br><br><br><br><br>
     <nav>
     <a href="/Index.html">Accueil</a>
@@ -76,10 +36,7 @@
   </header>
 
   <main class="container">
-    <!-- Boutons pilotés par auth.js -->
-
-
-    <!-- Visiteur non connecté -->
+    <!-- Visiteur non connecté (par défaut) -->
     <section id="guest">
       <p class="muted"><b>Section réservée aux adhérents.</b> Merci de vous connecter.</p>
     </section>
@@ -94,7 +51,6 @@
     <section id="app" class="hide">
       <p class="muted" id="welcome"></p>
 
-      <!-- Fieldset 1 : Administratif — visible UNIQUEMENT si l’utilisateur a ≥1 rôle -->
       <fieldset id="fs-general" class="hide">
         <legend>Administratif</legend>
         <div class="grid">
@@ -115,11 +71,9 @@
 
       <br>
 
-      <!-- Fieldset 2 : Les unités — visible si ≥1 rôle, filtrage possible via data-roles -->
       <fieldset id="fs-roles" class="hide">
         <legend>Les unités</legend>
         <div class="grid" id="role-cards">
-          <!-- Par défaut : rôles “chef,admin”. Adapte selon ton mapping réel -->
           <a class="card" href="/PM/adherents/meute 1PM/index.html" data-roles="M1PM,admin">
             <h3>Meute 1ère <br>Port Marly</h3>
             <p>Accéder à la page de l'unité.</p>
