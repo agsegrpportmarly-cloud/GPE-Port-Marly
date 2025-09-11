@@ -27,7 +27,13 @@
            font-src 'self' https: data:;
            frame-ancestors 'self'; base-uri 'self'">
 
-<script defer src="../auth.js"></script>
+<script defer src="../auth.js" onerror="
+  (function(){
+    var s=document.createElement('script'); s.defer=true; s.src='/auth.js';
+    s.onerror=function(){ var s2=document.createElement('script'); s2.defer=true; s2.src='/PM/auth.js'; document.head.appendChild(s2); };
+    document.head.appendChild(s);
+  })();
+"></script>
 </head>
 <body>
   <header class="hero">
