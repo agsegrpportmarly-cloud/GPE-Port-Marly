@@ -1,9 +1,5 @@
 <!doctype html>
 <html lang="fr">
-  <!-- SDK Auth0 (doit être chargé AVANT auth.js) -->
-<script defer src="https://cdn.auth0.com/js/auth0-spa-js/2.1/auth0-spa-js.production.js"></script>
-<!-- Script d'intégration (à la racine du site) -->
-<script defer src="/auth.js"></script>
 <head>
   <meta charset="utf-8">
   <title>Espace adhérents – Port-Marly</title>
@@ -22,6 +18,7 @@
     .hide{display:none}
     nav a{margin-right:1rem}
   </style>
+<script defer src="../auth.js"></script>
 </head>
 <body>
   <header class="hero">
