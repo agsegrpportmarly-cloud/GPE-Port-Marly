@@ -4,8 +4,8 @@
   window.__PM_AUTH_BOOTSTRAPPED__ = true;
 
   const CFG = {
-    domain: 'YOUR_AUTH0_DOMAIN',   // ex: dev-xxxxx.eu.auth0.com
-    clientId: 'YOUR_AUTH0_CLIENT_ID',
+    domain: 'dev-zl3rulx7tauw5f4h.us.auth0.com',   // ex: dev-xxxxx.eu.auth0.com
+    clientId: 'etdVdsWZQSoyQtrNdUKDRxytmXM4cZFL',
     rolesClaim: 'https://pmarly/roles'
   };
 
