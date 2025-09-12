@@ -1,12 +1,14 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8">
-  <title>Espace adhérents – Port-Marly</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
 
-  <link rel="stylesheet" href="../Style.css">
-  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+  <meta charset="utf-8" />
+  <title>Espace adhérents – Port-Marly</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <!-- Styles -->
+  <link rel="stylesheet" href="../Style.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet" />
 
   <style>
     .container{max-width:1100px;margin:0 auto;padding:24px}
@@ -18,42 +20,25 @@
     .hide{display:none}
     nav a{margin-right:1rem}
   </style>
-<meta http-equiv="Content-Security-Policy"
-  content="default-src 'self';
-           script-src 'self' https://cdn.auth0.com https://cdn.jsdelivr.net https://unpkg.com;
-           connect-src 'self' https://*.auth0.com https://*.cloudfront.net https://cdn.auth0.com https://cdn.jsdelivr.net https://unpkg.com;
-           img-src 'self' data: https:;
-           style-src 'self' 'unsafe-inline' https:;
-           font-src 'self' https: data:;
-           frame-ancestors 'self'; base-uri 'self'">
 
-<script defer src="../auth.js" onerror="
-  (function(){
-    var s=document.createElement('script'); s.defer=true; s.src='/auth.js';
-    s.onerror=function(){ var s2=document.createElement('script'); s2.defer=true; s2.src='/PM/auth.js'; document.head.appendChild(s2); };
-    document.head.appendChild(s);
-  })();
-"></script>
-<!-- SDK Auth0 self-host (local) -->
-<!-- SDK Auth0 (self-host) avec fallbacks -->
-<!-- SDK Auth0 self-host : chemin RELATIF à la page -->
-<script defer src="./vendor/auth0-spa-js.production.js"></script>
+  <!-- CSP via meta (pas de frame-ancestors ici) -->
+  <meta http-equiv="Content-Security-Policy"
+        content="
+          default-src 'self';
+          script-src 'self';
+          connect-src 'self' https://*.auth0.com https://*.cloudfront.net;
+          img-src 'self' data: https:;
+          style-src 'self' 'unsafe-inline' https:;
+          font-src 'self' https: data:;
+          base-uri 'self'
+        ">
 
-<!-- Ton intégration -->
-<script defer src="../auth.js"></script>
+  <!-- SDK Auth0 self-hosté (placé dans /PM/adherents/vendor/ ) -->
+  <script defer src="./vendor/auth0-spa-js.production.js"></script>
 
+  <!-- Intégration Auth (script à la racine /PM/) -->
+  <script defer src="../auth.js"></script>
 
-<!-- Intégration Auth (ne télécharge plus le SDK) avec fallbacks -->
-<script defer src="/PM/auth.js" onerror="
-  (function () {
-    var s1 = document.createElement('script'); s1.defer = true; s1.src = '/auth.js';
-    s1.onerror = function () {
-      var s2 = document.createElement('script'); s2.defer = true; s2.src = '../auth.js';
-      document.head.appendChild(s2);
-    };
-    document.head.appendChild(s1);
-  })();
-"></script>
 
 </head>
 <body>

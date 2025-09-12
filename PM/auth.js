@@ -1,22 +1,23 @@
-/* /PM/auth.js — auto-prefix (PM ou racine), self-host du SDK, bouton garanti */
+/* /PM/auth.js — exécution unique + SDK déjà chargé par la page */
 (() => {
-const CFG = {
-  domain: 'dev-zl3rulx7tauw5f4h.us.auth0.com',        // ex: dev-xxxx.eu.auth0.com
-  clientId: 'etdVdsWZQSoyQtrNdUKDRxytmXM4cZFL',
-  rolesClaim: 'https://pmarly/roles'
-};
+  if (window.__PM_AUTH_BOOTSTRAPPED__) return;
+  window.__PM_AUTH_BOOTSTRAPPED__ = true;
 
+  const CFG = {
+    domain: 'YOUR_AUTH0_DOMAIN',   // ex: dev-xxxxx.eu.auth0.com
+    clientId: 'YOUR_AUTH0_CLIENT_ID',
+    rolesClaim: 'https://pmarly/roles'
+  };
 
-  // Base path auto: ex '/PM/' si le site est servi depuis ce dossier
+  // Base path auto (ex: '/PM/')
   const thisScript = document.currentScript || [...document.scripts].find(s => (s.src||'').includes('/auth.js'));
   const baseUrl = thisScript ? new URL(thisScript.src, window.location.href) : new URL(window.location.href);
-  const BASE_PATH = baseUrl.pathname.replace(/[^/]+$/, '');                   // ex: '/PM/'
-  const ABS = (p) => BASE_PATH + String(p).replace(/^\//,'');                 // ABS('adherents/') -> '/PM/adherents/'
+  const BASE_PATH = baseUrl.pathname.replace(/[^/]+$/, '');
+  const ABS = (p) => BASE_PATH + String(p).replace(/^\//,'');
   const REDIRECT_PATH = ABS('adherents/');
 
   let auth0Client = null;
 
-  // --- UI minimal (le style est dans Style.css) ---
   function ensureBtn(){
     let b = document.getElementById('auth-cta');
     if (!b) {
@@ -24,7 +25,7 @@ const CFG = {
       b.id = 'auth-cta';
       b.href = '#';
       b.textContent = 'Connexion…';
-      b.setAttribute('aria-disabled', 'true');
+      b.setAttribute('aria-disabled','true');
       document.body.appendChild(b);
     }
     return b;
@@ -85,10 +86,9 @@ const CFG = {
   }
 
   async function init(){
-    // Le SDK doit déjà être chargé par <script src="../vendor/...">
     if (typeof window.createAuth0Client !== 'function') {
       setBtn('Se connecter (indispo)', { disabled:true });
-      status('SDK non chargé (vérifie ../vendor/auth0-spa-js.production.js)');
+      status('SDK non chargé (vérifie le <script src="./vendor/auth0-spa-js.production.js">)');
       return;
     }
 
@@ -102,7 +102,6 @@ const CFG = {
       }
     });
 
-    // Callback Auth0 ?code=&state=
     const p = new URLSearchParams(location.search);
     if (p.has('code') && p.has('state')) {
       try {
@@ -110,8 +109,7 @@ const CFG = {
         history.replaceState({}, document.title, location.pathname);
         location.replace(appState?.targetUrl || REDIRECT_PATH);
         return;
-      } catch (e) {
-        console.error('Erreur callback Auth0', e);
+      } catch {
         status('Erreur callback');
       }
     }
@@ -123,10 +121,7 @@ const CFG = {
   document.addEventListener('DOMContentLoaded', async ()=>{
     ensureBtn();
     setBtn('Connexion…', { disabled:true });
-    try { await init(); } catch (e) {
-      console.error('Init Auth', e);
-      status('Init erreur');
-      setBtn('Se connecter (indispo)', { disabled:true });
-    }
+    try { await init(); }
+    catch { status('Init erreur'); setBtn('Se connecter (indispo)', { disabled:true }); }
   });
 })();
