@@ -1,4 +1,4 @@
-/* /PM/auth.js — exécution unique + SDK déjà chargé par la page */
+/* /PM/auth.js — SDK déjà chargé par la page */
 (() => {
   if (window.__PM_AUTH_BOOTSTRAPPED__) return;
   window.__PM_AUTH_BOOTSTRAPPED__ = true;
@@ -44,6 +44,13 @@
   }
   const show = (id,on=true)=>{ const el=document.getElementById(id); if(el) el.classList.toggle('hide',!on); };
 
+  // ⇩⇩⇩  clé : récupérer la bonne fonction de création (v2 = auth0.createAuth0Client)
+  function getCreateFn() {
+    if (window.auth0 && typeof window.auth0.createAuth0Client === 'function') return window.auth0.createAuth0Client;
+    if (typeof window.createAuth0Client === 'function') return window.createAuth0Client;
+    return null;
+  }
+
   async function render(){
     const isAuth = await auth0Client.isAuthenticated();
 
@@ -86,13 +93,16 @@
   }
 
   async function init(){
-    if (typeof window.createAuth0Client !== 'function') {
+    // 1) Le SDK doit être chargé par la page (./vendor/...)
+    const createFn = getCreateFn();
+    if (!createFn) {
       setBtn('Se connecter (indispo)', { disabled:true });
-      status('SDK non chargé (vérifie le <script src="./vendor/auth0-spa-js.production.js">)');
+      status('SDK chargé ? Si oui, utilisez auth0.createAuth0Client en v2.');
       return;
     }
 
-    auth0Client = await createAuth0Client({
+    // 2) Initialisation
+    auth0Client = await createFn({
       domain: CFG.domain,
       clientId: CFG.clientId,
       cacheLocation: 'localstorage',
@@ -102,6 +112,7 @@
       }
     });
 
+    // 3) Callback
     const p = new URLSearchParams(location.search);
     if (p.has('code') && p.has('state')) {
       try {
