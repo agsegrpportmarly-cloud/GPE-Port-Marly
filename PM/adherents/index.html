@@ -1,7 +1,6 @@
 <!doctype html>
 <html lang="fr">
 <head>
-
   <meta charset="utf-8" />
   <title>Espace adhérents – Port-Marly</title>
   <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -21,7 +20,7 @@
     nav a{margin-right:1rem}
   </style>
 
-  <!-- CSP via meta (pas de frame-ancestors ici) -->
+  <!-- CSP méta (suffisant pour le self-host) -->
   <meta http-equiv="Content-Security-Policy"
         content="
           default-src 'self';
@@ -33,14 +32,13 @@
           base-uri 'self'
         ">
 
-  <!-- SDK Auth0 self-hosté (placé dans /PM/adherents/vendor/ ) -->
+  <!-- SDK Auth0 self-host (au même niveau que la page) -->
   <script defer src="./vendor/auth0-spa-js.production.js"></script>
 
-  <!-- Intégration Auth (script à la racine /PM/) -->
+  <!-- Intégration Auth (dans /PM/) -->
   <script defer src="../auth.js"></script>
-
-
 </head>
+
 <body>
   <header class="hero">
     <br><br><br><br><br><br><br>
