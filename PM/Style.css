@@ -270,3 +270,25 @@ footer img {
 .lightbox .caption{
   margin-top:8px; text-align:center; color:#eaf6ff; opacity:.9;
 }
+/* 1) Donne une vraie hauteur visuelle à l'image du header */
+header.hero{
+  position: relative;
+  background: var(--bleu) url("Header_PM.png") center/cover no-repeat;
+  color: var(--blanc);
+}
+
+/* Un bloc fantôme avant le <nav> qui remplace tes <br> */
+header.hero::before{
+  content:"";
+  display:block;
+  height: clamp(100px, 0.5vw, 260px); /* ajuste la hauteur du visuel */
+}
+
+/* 2) Le menu reste lisible + option "sticky" quand on scrolle */
+header.hero nav{
+  background: rgba(0,0,0,.30);
+  backdrop-filter: blur(3px);
+  position: sticky;   /* il se colle en haut quand on l’atteint */
+  top: 0;
+  z-index: 50;
+}
