@@ -1,0 +1,198 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>La Méthode scoute, </title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./Style.css" />
+  <style>
+    /* ==== additions design accueil ==== */
+    :root{
+      --accent:#0ea5e9;           /* bleu clair pour accents */
+      --glass:rgba(255,255,255,.06);
+      --glass-b:#ffffff16;
+    }
+    main.home{max-width:1200px;margin:24px auto;padding:0 16px;display:fixe;grid-template-columns:2fr 1fr;gap:22px}
+    @media (max-width:980px){ main.home{grid-template-columns:1fr} }
+
+    /* bloc titre intro */
+    .intro{
+      background:linear-gradient(180deg,#0f2b44 0%, #0c253b 100%);
+      border:1px solid var(--glass-b);
+      border-radius:16px; box-shadow:0 20px 60px rgba(0,0,0,.25);
+      padding:20px 18px; color:#e8f3fb
+    }
+    .intro h1{margin:.2rem 0 6px; font-size:clamp(22px,2.3vw,30px)}
+    .intro p{margin:0; opacity:.9}
+
+    /* cartes rubriques */
+    .hero-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:18px}
+    @media (max-width:980px){ .hero-grid{grid-template-columns:1fr} }
+    .card-link{
+      position:relative; overflow:hidden;
+      display:block; padding:18px 16px; border-radius:18px;
+      background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+      border:1px solid var(--glass-b);
+      box-shadow:0 10px 30px rgba(0,0,0,.25);
+      transition:transform .2s ease, box-shadow .2s ease, background .3s;
+      color:var(--blanc);
+    }
+    .card-link:hover{ transform:translateY(-3px); box-shadow:0 18px 36px rgba(0,0,0,.35); }
+    .card-link h3{margin:8px 0 6px;font-size:clamp(18px,1.6vw,22px)}
+    .card-link p{margin:0; opacity:.85; font-size:15px}
+    .badge{
+      position:absolute; top:14px; right:14px;
+      padding:.25rem .5rem; border-radius:999px;
+      font-size:12px; font-weight:700;
+      background:rgba(14,165,233,.18); border:1px solid rgba(14,165,233,.35); color:#bfe9ff
+    }
+    .icon{
+      width:44px;height:44px;border-radius:12px;display:grid;place-items:center;
+      background:rgba(14,165,233,.12); border:1px solid rgba(14,165,233,.25); margin-bottom:8px
+    }
+    .icon svg{width:26px;height:26px;opacity:.95}
+
+    /* colonne latérale : sites amis */
+    .aside{
+      position:relative;
+      background:linear-gradient(180deg,#0f2b44 0%, #0c253b 100%);
+      border:1px solid var(--glass-b);
+      border-radius:16px; padding:18px; color:#e8f3fb;
+      box-shadow:0 20px 60px rgba(0,0,0,.25);
+    }
+    .aside h2{margin:0 0 10px;font-size:20px}
+    .friends{display:grid;grid-template-columns:1fr;gap:12px}
+    .site-card{
+      display:grid;grid-template-columns:56px 1fr;gap:12px;align-items:center;
+      padding:10px;border-radius:14px;background:rgba(255,255,255,.03);
+      border:1px solid var(--glass-b); transition:transform .18s, background .2s
+    }
+    .site-card:hover{ transform:translateY(-2px); background:rgba(255,255,255,.05) }
+    .site-card img{width:56px;height:56px;object-fit:contain;border-radius:10px;background:#fff}
+    .site-card span{display:block;line-height:1.2}
+    .site-card small{opacity:.8}
+
+    /* mini-switcher réutilisable (pour les pages internes) */
+    .section-switcher{
+      display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 18px
+    }
+    .section-switcher a{
+      padding:8px 12px;border-radius:999px;
+      background:rgba(255,255,255,.06); border:1px solid var(--glass-b);
+      color:#eaf6ff;font-weight:700; letter-spacing:.2px; transition:.2s
+    }
+    .section-switcher a:hover{ background:rgba(255,255,255,.1) }
+    .section-switcher .active{ background:rgba(14,165,233,.18); border-color:rgba(14,165,233,.4); color:#bfe9ff }
+  </style>
+</head>
+
+<body>
+  <!-- ton header.hero + nav existants -->
+  <header class="hero">
+   
+    <nav>
+      <a href="/Index.html">Accueil</a>
+      <a href="/Activites.html">Nos unités</a>
+      <a href="/adherents/">Espace adhérents</a>
+      <a href="/preinscriptions.html">Pré-Inscriptions</a>
+    </nav>
+  </header>
+<nav class="section-switcher">
+  <a href="/Les_scouts_de_PM.html" >Nos groupes</a>
+  <a href="/Notre_spiritualite.html"class="active">Notre spiritualité</a>
+  <a href="/La_methode.html">La méthode AGSE</a>
+</nav>
+  <main class="home">
+    <section>
+<div class="intro"> 
+  <h1>Notre spiritualité</h1>
+  <p>
+    Notre vie scoute s’enracine dans la Tradition de l’Église et se nourrit d’une liturgie soignée, d’une vie de prière régulière
+    et du service du prochain. Nous sommes accompagnés par les chanoines de l’<strong>Institut du Christ Roi Souverain Prêtre</strong> (ICRSP),
+    dont l’idéal est la <em>diffusion et la défense du Règne du Christ</em> dans toute la vie humaine. :contentReference[oaicite:0]{index=0}
+  </p>
+
+  <article>
+    <h2>Christ Roi et Souverain Prêtre</h2>
+    <p>
+      L’ICRSP est une société de vie apostolique de droit pontifical, de spiritualité salésienne, au service de la liturgie et de l’évangélisation.
+      Cette orientation nourrit notre paroisse et nos unités : adoration, confession régulière, messe dominicale et fêtes de l’année liturgique. :contentReference[oaicite:1]{index=1}
+    </p>
+  </article>
+
+  <article>
+    <h2>Spiritualité salésienne (Saint François de Sales)</h2>
+    <p>
+      Sous le patronage de saint François de Sales : douceur ferme, charité concrète, équilibre entre oraison et action. Cette pédagogie
+      encourage une vie intérieure simple et fidèle, adaptée à chacun. :contentReference[oaicite:2]{index=2}
+    </p>
+  </article>
+
+  <article>
+    <h2>Liturgie traditionnelle</h2>
+    <p>
+      La liturgie (messe selon l’usage romain traditionnel, sacrements, offices) est la source de notre vie et modèle de prière communautaire :
+      « la liturgie est le cœur de la vie spirituelle ». :contentReference[oaicite:3]{index=3}
+    </p>
+  </article>
+
+  <article>
+    <h2>Mission, service et charité</h2>
+    <p>
+      La contemplation conduit au service : formation des consciences, œuvres de charité, rayonnement apostolique au sein des familles,
+      de l’école, du travail et de la cité. :contentReference[oaicite:4]{index=4}
+    </p>
+  </article>
+
+  <h2>Racines du scoutisme catholique</h2>
+  <article>
+    <h3>Père Jacques Sevin, sj</h3>
+    <p>
+      Le P. Sevin intègre la foi au cœur de la méthode : promesse, loi, prière, vie fraternelle. Il voulait « user ses jours au service des garçons ». :contentReference[oaicite:5]{index=5}
+    </p>
+    <p class="citation">
+      « La Promesse… une force ; une direction que tu donnes à ton effort. » :contentReference[oaicite:6]{index=6}
+    </p>
+  </article>
+
+  <article>
+    <h3>Chanoine Antoine-Louis Cornette</h3>
+    <p>
+      Co-fondateur du scoutisme catholique en France : inséparable de l’aumônerie, des sacrements et d’une vie chrétienne exigeante.
+    </p>
+    <p class="citation">
+      « Notre scoutisme vaudra ce que vaudra son esprit… Ne négligeons pas l’âme scoute. » :contentReference[oaicite:7]{index=7}
+    </p>
+  </article>
+
+  <article>
+    <h3>Baden-Powell, source commune</h3>
+    <p>
+      L’intuition originelle reste notre boussole : éducation par la confiance, service, nature, joie. 
+    </p>
+    <p class="citation">
+      « Le vrai chemin du bonheur est de le donner aux autres… Quittez la terre un peu meilleure. » :contentReference[oaicite:8]{index=8}
+    </p>
+  </article>
+
+  <h2>Concrètement, pour nos unités</h2>
+  <ul>
+    <li><strong>Vie de prière</strong> : messe dominicale, confessions régulières, oraison brève, chapelet, bénédicités, action de grâce. :contentReference[oaicite:9]{index=9}</li>
+    <li><strong>Catéchèse et formation</strong> : appui sur l’aumônerie ICRSP ; préparation aux sacrements et aux fêtes liturgiques. :contentReference[oaicite:10]{index=10}</li>
+    <li><strong>Service et mission</strong> : visites, entraide, missions locales, œuvres paroissiales et diocésaines. :contentReference[oaicite:11]{index=11}</li>
+    <li><strong>Promesse & Loi</strong> : engagement libre et loyal ; « Sur mon honneur, avec la grâce de Dieu… » (formule scoute). :contentReference[oaicite:12]{index=12}</li>
+  </ul>
+ 
+
+     </section>
+
+  </main>
+
+
+  <footer>
+    © AGSE – Groupes de Port-Marly
+    <img src="./images/Logo_GS.png" alt="Logo AGSE" width="120" height="auto">
+  </footer>
+</body>
+</html>
