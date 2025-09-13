@@ -125,7 +125,7 @@
       }
     }
 
-    status('SDK OK');
+   // status('SDK OK');
     await render();
   }
 
