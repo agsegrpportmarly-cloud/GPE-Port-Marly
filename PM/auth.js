@@ -37,7 +37,7 @@
     b.onclick = null;
     if (!disabled && onClick) b.onclick = (e)=>{ e.preventDefault(); onClick(); };
   }
-  function status(t){
+  function status(){
     let el = document.getElementById('auth-status');
     if (!el) { el = document.createElement('div'); el.id='auth-status'; document.body.appendChild(el); }
     el.textContent = t;
