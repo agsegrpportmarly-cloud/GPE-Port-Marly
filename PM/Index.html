@@ -1,84 +1,193 @@
 <!doctype html>
 <html lang="fr">
-  
 <head>
-  <meta charset="utf-8">
-  <title>Scouts d’Europe – Port-Marly</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-<link href="Style.css" rel="stylesheet">
+  <meta charset="utf-8" />
+  <title>Accueil – Groupes Scouts d’Europe Port-Marly</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./Style.css" />
+  <style>
+    /* ==== additions design accueil ==== */
+    :root{
+      --accent:#0ea5e9;           /* bleu clair pour accents */
+      --glass:rgba(255,255,255,.06);
+      --glass-b:#ffffff16;
+    }
+    main.home{max-width:1200px;margin:24px auto;padding:0 16px;display:grid;grid-template-columns:2fr 1fr;gap:22px}
+    @media (max-width:980px){ main.home{grid-template-columns:1fr} }
 
-  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+    /* bloc titre intro */
+    .intro{
+      background:linear-gradient(180deg,#0f2b44 0%, #0c253b 100%);
+      border:1px solid var(--glass-b);
+      border-radius:16px; box-shadow:0 20px 60px rgba(0,0,0,.25);
+      padding:20px 18px; color:#e8f3fb
+    }
+    .intro h1{margin:.2rem 0 6px; font-size:clamp(22px,2.3vw,30px)}
+    .intro p{margin:0; opacity:.9}
+
+    /* cartes rubriques */
+    .hero-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:18px}
+    @media (max-width:980px){ .hero-grid{grid-template-columns:1fr} }
+    .card-link{
+      position:relative; overflow:hidden;
+      display:block; padding:18px 16px; border-radius:18px;
+      background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+      border:1px solid var(--glass-b);
+      box-shadow:0 10px 30px rgba(0,0,0,.25);
+      transition:transform .2s ease, box-shadow .2s ease, background .3s;
+      color:var(--blanc);
+    }
+    .card-link:hover{ transform:translateY(-3px); box-shadow:0 18px 36px rgba(0,0,0,.35); }
+    .card-link h3{margin:8px 0 6px;font-size:clamp(18px,1.6vw,22px)}
+    .card-link p{margin:0; opacity:.85; font-size:15px}
+    .badge{
+      position:absolute; top:14px; right:14px;
+      padding:.25rem .5rem; border-radius:999px;
+      font-size:12px; font-weight:700;
+      background:rgba(14,165,233,.18); border:1px solid rgba(14,165,233,.35); color:#bfe9ff
+    }
+    .icon{
+      width:44px;height:44px;border-radius:12px;display:grid;place-items:center;
+      background:rgba(14,165,233,.12); border:1px solid rgba(14,165,233,.25); margin-bottom:8px
+    }
+    .icon svg{width:26px;height:26px;opacity:.95}
+
+    /* colonne latérale : sites amis */
+    .aside{
+      position:relative;
+      background:linear-gradient(180deg,#0f2b44 0%, #0c253b 100%);
+      border:1px solid var(--glass-b);
+      border-radius:16px; padding:18px; color:#e8f3fb;
+      box-shadow:0 20px 60px rgba(0,0,0,.25);
+    }
+    .aside h2{margin:0 0 10px;font-size:20px}
+    .friends{display:grid;grid-template-columns:1fr;gap:12px}
+    .site-card{
+      display:grid;grid-template-columns:56px 1fr;gap:12px;align-items:center;
+      padding:10px;border-radius:14px;background:rgba(255,255,255,.03);
+      border:1px solid var(--glass-b); transition:transform .18s, background .2s
+    }
+    .site-card:hover{ transform:translateY(-2px); background:rgba(255,255,255,.05) }
+    .site-card img{width:56px;height:56px;object-fit:contain;border-radius:10px;background:#fff}
+    .site-card span{display:block;line-height:1.2}
+    .site-card small{opacity:.8}
+
+    /* mini-switcher réutilisable (pour les pages internes) */
+    .section-switcher{
+      display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 18px
+    }
+    .section-switcher a{
+      padding:8px 12px;border-radius:999px;
+      background:rgba(255,255,255,.06); border:1px solid var(--glass-b);
+      color:#eaf6ff;font-weight:700; letter-spacing:.2px; transition:.2s
+    }
+    .section-switcher a:hover{ background:rgba(255,255,255,.1) }
+    .section-switcher .active{ background:rgba(14,165,233,.18); border-color:rgba(14,165,233,.4); color:#bfe9ff }
+  </style>
 </head>
+
 <body>
+  <!-- ton header.hero + nav existants -->
   <header class="hero">
-    <br>
-    <br>
-    <br>
-    <br>    
-    <br>
-    <br>    
-    <br>
-<nav>
-  <a href="Index.html">Accueil</a>
-  <a href="Activites.html">Nos unités</a>
-  <a href="adherents/index.html">Espace adhérents</a>
-  <a href="preinscriptions.html">Pré-Inscriptions</a>
-</nav>
-
+    <br><br><br><br><br><br><br>
+    <nav>
+      <a href="/Index.html">Accueil</a>
+      <a href="/Activites.html">Nos unités</a>
+      <a href="/adherents/">Espace adhérents</a>
+      <a href="/preinscriptions.html">Pré-Inscriptions</a>
+    </nav>
   </header>
-<main class="container section">
-  <fieldset>
-    <legend>Qui sommes nous?</legend>
-  <div class="grid cols-3">
-    <div class="card">
-      <img src="images/joie_impression.jpg" alt="Louveteaux / Louvettes" style="width:50%;border-radius:8px">
-        <h3>Les scouts de port-Marly</h3>
-        <p>Créé au début des années 60, la 1ère Port-Marly a été la première unité marine des scouts d'Europe. Est arrivée ensuite la création de la 2ème Port-Marly en 1964...</p>
-        
-        <a class="btn" href="Activites.html">Lire la suite</a>
+
+  <main class="home">
+    <section>
+      <div class="intro">
+        <h1>Semper Parati – Port-Marly</h1>
+        <p>Bienvenue sur le site des Groupes Scouts d’Europe de Port-Marly. Découvrez nos unités, notre spiritualité, et la méthode AGSE.</p>
+
+        <!-- cartes principales -->
+        <div class="hero-grid">
+          <a class="card-link" href="/Nos-groupes.html" aria-label="Nos groupes">
+            <span class="badge">Découvrir</span>
+            <div class="icon" aria-hidden="true">
+              <!-- people icon -->
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5C15 14.17 10.33 13 8 13zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.96 1.97 3.45V19h6v-2.5C23 14.17 18.33 13 16 13z"/></svg>
+            </div>
+            <h3>Nos groupes</h3>
+            <p>Unités, âges, calendrier et vie d’équipe.</p>
+          </a>
+
+          <a class="card-link" href="/Spiritualite.html" aria-label="Notre spiritualité">
+            <span class="badge">À lire</span>
+            <div class="icon" aria-hidden="true">
+              <!-- cross/compass icon -->
+                  <svg viewBox="0 0 24 24" fill="currentColor">>
+  <path d="M11 3h2v6h6v2h-6v10h-2V11H5V9h6Z"/>
+</svg>
+            </div>
+            <h3>Notre spiritualité</h3>
+            <p>Racines, prière, et chemins de croissance.</p>
+          </a>
+
+          <a class="card-link" href="/Methode-AGSE.html" aria-label="La méthode AGSE">
+            <span class="badge">Comprendre</span>
+            <div class="icon" aria-hidden="true">
+              <!-- flag/method icon -->
+              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h2v16H4V4zm4 1h10l-2.5 3L18 11H8V5z"/></svg>
+            </div>
+            <h3>La méthode AGSE</h3>
+            <p>Pédagogie par la progression, nature et responsabilité.</p>
+          </a>
+        </div>
       </div>
-    <div class="card">
-      <img src="images/scout_radio_007_impression.jpg" alt="Scouts / Guides" style="width:50%;border-radius:8px">
-        <h3>La spiritualité</h3>
-        <p>Vous souhaitez inscrire votre enfant ? merci de remplir le formulaire de pré-inscription.</p>
-        
-        <a class="btn" href="preinscriptions.html">Lire la suite</a>
+      <!-- Photo de groupe -->
+<a class="card-photo" href="./images/groupe.jpg" target="_blank" rel="noopener">
+  <figure>
+    <img src="./images/groupe.jpg"
+         alt="Photo de groupe des unités de Port-Marly devant l’église Saint-Louis"
+         loading="lazy">
+    <figcaption>Nos unités – Port-Marly, Rentrée au Parc de Marly</figcaption>
+  </figure>
+</a>
+    </section>
+
+
+
+    <!-- colonne droite : sites amis -->
+    <aside class="aside">
+      <h2>Sites amis</h2>
+      <div class="friends">
+        <a class="site-card" href="https://www.scouts-europe.org" target="_blank" rel="noopener">
+          <img src="./images/agse.png" alt="AGSE – Scouts d’Europe">
+          <span>AGSE – Scouts d’Europe<br><small>Site national</small></span>
+        </a>
+        <a class="site-card" href="https://www.paroisses-portmarly.fr" target="_blank" rel="noopener">
+          <img src="./images/paroisse.png" alt="Paroisse Saint-Louis">
+          <span>Paroisse Saint-Louis<br><small>Port-Marly</small></span>
+        </a>
+        <a class="site-card" href="https://www.saintgermainrd.fr" target="_blank" rel="noopener">
+          <img src="./images/diocese.png" alt="Diocèse">
+          <span>Diocèse<br><small>Ressources & actualités</small></span>
+        </a>
+        <a class="site-card" href="https://www.ville-port-marly.fr" target="_blank" rel="noopener">
+          <img src="./images/ville.png" alt="Ville de Port-Marly">
+          <span>Ville de Port-Marly<br><small>Vie locale</small></span>
+        </a>
+        <a class="site-card" href="https://www.sgdf.fr" target="_blank" rel="noopener">
+          <img src="./images/amis1.png" alt="Scouts et Guides">
+          <span>Scouts & Guides<br><small>Site partenaire</small></span>
+        </a>
+        <a class="site-card" href="https://europa-scout.org" target="_blank" rel="noopener">
+          <img src="./images/europa.png" alt="Union Internationale des Guides et Scouts d’Europe">
+          <span>UIGSE<br><small>Union internationale</small></span>
+        </a>
       </div>
-    <div class="card">
-      <img src="images/joie_impression.jpg" alt="Louveteaux / Louvettes" style="width:50%;border-radius:8px">
-        <h3>La méthode</h3>
-        <p>Le groupe de Port-Marly (AGSE) accueille les jeunes pour vivre l’aventure scoute : nature, responsabilité, progression personnelle et spirituelle, service.</p>
-        
-        <a class="btn" href="Activites.html">Lire la suite</a>
-      </div>
+    </aside>
+  </main>
 
-  </div>
-</fieldset>
-
-<Fieldset>
-  <legend>Liens utiles</legend>
-<div class="grid cols-3">
-    <div class="card">
-      <img src="images/Logo_GS.png" alt="Louveteaux / Louvettes" style="width:50%;border-radius:8px">
-        
-        <p>Site officiel de l'Association des guides et scouts d'Europe</p>
-        
-        <a class="btn" href="https://www.scouts-europe.org/"target="_blank" rel="noopener noreferrer">L'AGSE</a>
-      </div>
-    <div class="card">
-      <img src="images/chap.png" alt="Scouts / Guides" style="width:70%;border-radius:8px">
-      
-        <p>Lien vers le site de la Chapellenie Notre Dame de France</p>
-       
-        <a class="link" href="https://icrspfrance.fr/apostolats/port-marly"target="_blank" rel="noopener noreferrer">L'ICRSP à Port-Marly</a>
-      </div>
-
-
-</Fieldset>
-
-
-</main>
-
-  <footer>© AGSE – Groupes de Port-Marly <img src="../images/Logo_GS.png" alt="Logo AGSE" width="120" height="auto"></footer>
+  <footer>
+    © AGSE – Groupes de Port-Marly
+    <img src="./images/Logo_GS.png" alt="Logo AGSE" width="120" height="auto">
+  </footer>
 </body>
 </html>
