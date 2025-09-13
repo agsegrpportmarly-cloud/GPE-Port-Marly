@@ -315,3 +315,116 @@ header.hero nav{
 margin: 1em 1em 1em 1em;   /* espace autour (haut/droite/bas/gauche) */
   border-radius: 8px;
 }
+.historique-port-marly {      
+  background:linear-gradient(180deg,#0f2b44 0%, #0c253b 100%);
+  border:1px solid var(--glass-b);
+  border-radius:16px; box-shadow:0 20px 60px rgba(0,0,0,.25);
+  padding:20px 18px; color:#e8f3fb
+    }
+.historique-port-marly h1 { font-size: 2rem; margin-bottom: .5rem; }
+.historique-port-marly p { line-height: 1.65; }
+
+.timeline { list-style: none; padding: 0; margin: 1rem 0 2rem; border-left: 3px solid #0C253C; }
+.timeline .event { position: relative; margin: 1.25rem 0 1.25rem 1rem; padding-left: 1rem; }
+.timeline .event::before {
+  content: ""; position: absolute; left: -10px; top: .35rem; width: .75rem; height: .75rem;
+  border-radius: 50%; background: #0C253C;
+}
+.timeline time { font-weight: 700; color: #0C253C; }
+.timeline .card { background: #f8fafc; border-radius: .75rem; padding: .75rem .9rem; box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+.timeline .card h3 { margin: 0 0 .25rem; font-size: 1.1rem; }
+.timeline figure { margin: .5rem 0 0; }
+.timeline img { width: 100%; max-height: 220px; object-fit: cover; border-radius: .5rem; }
+.timeline .badge { display: inline-block; margin-top: .25rem; padding: .15rem .5rem; font-size: .85rem; background: #e6eef6; border-radius: .4rem; }
+
+.timeline .girls::before { background: #9b3a6b; }      /* repère visuel pour les groupes filles */
+.timeline .girls time { color: #9b3a6b; }
+
+.units-today { background: #fff; border: 1px solid #e5e7eb; border-radius: .75rem; padding: 1rem; }
+.units-today h2 { margin-top: 0; font-size: 1.25rem; }
+.units-today .note { font-size: .9rem; color: #475569; }
+
+/* ====== Timeline Port-Marly (look sombre élégant, années très visibles) ====== */
+:root{
+  --pm-navy:#0C253C;
+  --pm-ink:#0b1f34;
+  --pm-bg:#0f2034;         /* fond dé-saturé pour panneaux */
+  --pm-soft:#e8eef6;       /* teinte douce pour panneaux */
+  --pm-rail:#a7b6ca;       /* ligne de frise */
+  --pm-girls:#9b3a6b;
+  --pm-essaim:#6b7f99;
+}
+
+.historique-port-marly{max-width:1000px;margin:0 auto;padding:1rem}
+.historique-port-marly h1{font-size:2rem;margin:0 0 .25rem;color:var(--pm-soft)}
+.historique-port-marly .lead{margin:.25rem 0 1rem;line-height:1.65}
+
+.legend{display:flex;gap:.5rem;flex-wrap:wrap;margin:.5rem 0 1rem}
+.tag{display:inline-block;font-size:.8rem;padding:.2rem .5rem;border-radius:.5rem;background:var(--pm-soft);color:var(--pm-navy);border:1px solid #d5dfec}
+.tag.marine{background:#d9e9f5;border-color:#c5d7e8}
+.tag.filles{background:#f4e0ea;color:#68284c;border-color:#e9c2d5}
+.tag.essaim{background:#e9edf3;color:#3b4b63;border-color:#d3dce8}
+
+.timeline{position:relative;list-style:none;padding:0;margin:1.25rem 0 2rem}
+.timeline::before{
+  content:"";position:absolute;left:7.5rem;top:0;bottom:0;width:3px;
+  background:linear-gradient(180deg,var(--pm-rail),#c1cfde);
+  border-radius:3px;
+}
+.event{position:relative;display:grid;grid-template-columns:7.5rem 1.75rem 1fr;align-items:start;gap:.75rem;margin:.75rem 0}
+.event .year{
+  font-weight:900;letter-spacing:.02em;line-height:1;
+  font-size:2.25rem;color:#fff;background:var(--pm-navy);
+  padding:.35rem .6rem;border-radius:.5rem;justify-self:end;
+  box-shadow:0 2px 10px rgba(12,37,60,.25)
+}
+.event .year.emph{
+  background:linear-gradient(135deg,var(--pm-navy),#1a3c5f);
+}
+.event .rail-dot{
+  width:.95rem;height:.95rem;border-radius:50%;
+  background:var(--pm-navy);box-shadow:0 0 0 4px #e6eef6, 0 2px 6px rgba(0,0,0,.1);
+  align-self:center;justify-self:center;
+}
+.event.girls .rail-dot{background:var(--pm-girls)}
+.event .content{
+  background:linear-gradient(180deg,#f1f5fb,#eef2f7); /* pas “carte blanche” */
+  border:1px solid #dbe5f1;border-left:5px solid var(--pm-navy);
+  border-radius:.75rem;padding:.9rem 1rem;color:var(--pm-ink);
+  box-shadow:0 1px 6px rgba(0,0,0,.06)
+}
+.event.girls .content{border-left-color:var(--pm-girls)}
+.event h3{margin:.1rem 0 .35rem;font-size:1.1rem;color:var(--pm-navy)}
+.event p{margin:.15rem 0 .25rem;line-height:1.6}
+
+.units-today{
+  background:linear-gradient(180deg,#f7f9fc,#f2f5fa);
+  border:1px solid #042349;border-radius:.75rem;padding:1rem;margin-top:1rem
+}
+.units-today h2{margin:.1rem 0 .5rem;font-size:1.25rem;color:var(--pm-navy)}
+.units-today ul{margin:.25rem 0 .5rem;padding-left:1.1rem}
+.units-today li{margin:.25rem 0;line-height:1.6}
+.units-today .note{font-size:.9rem;color:#4b5a70}
+
+/* Responsive */
+@media (max-width:720px){
+  .timeline::before{left:5.5rem}
+  .event{grid-template-columns:5.5rem 1.5rem 1fr}
+  .event .year{font-size:1.8rem}
+}
+@media (max-width:520px){
+  .timeline::before{left:4.7rem}
+  .event{grid-template-columns:4.7rem 1.25rem 1fr}
+  .event .year{font-size:1.6rem}
+}
+.units-today, .units-today * { color: var(--pm-ink) !important; }
+.units-today h2 { color: var(--pm-navy) !important; }
+.units-today a { color: var(--pm-navy) !important; }
+.tag{
+  background: transparent !important;
+  border: none !important;
+  padding: 0 !important;
+  border-radius: 0 !important;
+  box-shadow: none !important;
+}
+
