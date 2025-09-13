@@ -13,7 +13,7 @@
       --glass:rgba(255,255,255,.06);
       --glass-b:#ffffff16;
     }
-    main.home{max-width:1200px;margin:24px auto;padding:0 16px;display:grid;grid-template-columns:2fr 1fr;gap:22px}
+    main.home{max-width:1200px;margin:24px auto;padding:0 16px;display:fixe;grid-template-columns:2fr 1fr;gap:22px}
     @media (max-width:980px){ main.home{grid-template-columns:1fr} }
 
     /* bloc titre intro */
@@ -98,89 +98,22 @@
       <a href="/preinscriptions.html">Pré-Inscriptions</a>
     </nav>
   </header>
-
+<nav class="section-switcher">
+  <a href="/Les_scouts_de_PM.html" class="active">Nos groupes</a>
+  <a href="/Notre_spiritualite.html">Notre spiritualité</a>
+  <a href="/La_methode.html">La méthode AGSE</a>
+</nav>
   <main class="home">
     <section>
       <div class="intro">
         <h1>Semper Parati – Port-Marly</h1>
         <p>Bienvenue sur le site des Groupes Scouts d’Europe de Port-Marly. Découvrez nos unités, notre spiritualité, et la méthode AGSE.</p>
 
-        <!-- cartes principales -->
-        <div class="hero-grid">
-          <a class="card-link" href="/Nos-groupes.html" aria-label="Nos groupes">
-            <span class="badge">Découvrir</span>
-            <div class="icon" aria-hidden="true">
-              <!-- people icon -->
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M16 11c1.66 0 2.99-1.34 2.99-3S17.66 5 16 5s-3 1.34-3 3 1.34 3 3 3zm-8 0c1.66 0 2.99-1.34 2.99-3S9.66 5 8 5 5 6.34 5 8s1.34 3 3 3zm0 2c-2.33 0-7 1.17-7 3.5V19h14v-2.5C15 14.17 10.33 13 8 13zm8 0c-.29 0-.62.02-.97.05 1.16.84 1.97 1.96 1.97 3.45V19h6v-2.5C23 14.17 18.33 13 16 13z"/></svg>
-            </div>
-            <h3>Nos groupes</h3>
-            <p>Unités, âges, calendrier et vie d’équipe.</p>
-          </a>
-
-          <a class="card-link" href="/Spiritualite.html" aria-label="Notre spiritualité">
-            <span class="badge">À lire</span>
-            <div class="icon" aria-hidden="true">
-              <!-- cross/compass icon -->
-                  <svg viewBox="0 0 24 24" fill="currentColor">>
-              <path d="M11 3h2v6h6v2h-6v10h-2V11H5V9h6Z"/></svg>
-            </div>
-            <h3>Notre spiritualité</h3>
-            <p>Racines, prière, et chemins de croissance.</p>
-          </a>
-
-          <a class="card-link" href="/Methode-AGSE.html" aria-label="La méthode AGSE">
-            <span class="badge">Comprendre</span>
-            <div class="icon" aria-hidden="true">
-              <!-- flag/method icon -->
-              <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4 4h2v16H4V4zm4 1h10l-2.5 3L18 11H8V5z"/></svg>
-            </div>
-            <h3>La méthode AGSE</h3>
-            <p>Pédagogie par la progression, nature et responsabilité.</p>
-          </a>
-        </div>
-              <!-- Photo de groupe -->
-<a class="card-photo" href="./images/groupe.jpg" target="_blank" rel="noopener">
-  <figure>
-    <img src="./images/RentreePM.jpg"
-         alt="Photo de groupe des unités de Port-Marly devant l’église Saint-Louis"
-         loading="lazy">
-    <figcaption>Nos unités – Port-Marly, Rentrée 2024 au Parc de Marly</figcaption>
-  </figure>
-</a>
       </div>
  
 
      </section>
-   
 
-
-
-    <!-- colonne droite : sites amis -->
-    <aside class="aside">
-      <h2>Aller plus loin...</h2>
-      <div class="friends">
-        <a class="site-card" href="https://www.scouts-europe.org" target="_blank" rel="noopener">
-          <img src="./images/AGSE_croix.png" alt="AGSE – Scouts d’Europe">
-          <span>AGSE – Scouts d’Europe<br><small>Site national</small></span>
-        </a>
-        <a class="site-card" href="https://icrspfrance.fr/apostolats/port-marly" target="_blank" rel="noopener">
-          <img src="./images/logoCNDF.png" alt="Paroisse Saint-Louis">
-          <span>Paroisse Saint-Louis<br><small>Port-Marly</small></span>
-        </a>
-        <a class="site-card" href="https://www.ville-port-marly.fr" target="_blank" rel="noopener">
-          <img src="./images/LogoPM.png" alt="Ville de Port-Marly">
-          <span>Boutique Port- Marly<br><small>Vie locale</small></span>
-        </a>        
-        <a class="site-card" href="https://www.saintgermainrd.fr" target="_blank" rel="noopener">
-          <img src="./images/textoscout.png" alt="Diocèse">
-          <span>Textoscout<br><small>Textes et citations à méditer</small></span>
-        </a>
-        <a class="site-card" href="https://www.carrick.fr/" target="_blank" rel="noopener">
-          <img src="./images/carrick.jpeg" alt="Union Internationale des Guides et Scouts d’Europe">
-          <span>Carrick<br><small>Boutique carrick</small></span>
-        </a>
-      </div>
-    </aside>
   </main>
 
 

@@ -284,6 +284,7 @@ header.hero{
   position: relative;
   background: var(--bleu) url("Header_PM.png") center/cover no-repeat;
   color: var(--blanc);
+  height: auto;
 }
 
 /* Un bloc fantôme avant le <nav> qui remplace tes <br> */
@@ -300,4 +301,17 @@ header.hero nav{
   position: sticky;   /* il se colle en haut quand on l’atteint */
   top: 0;
   z-index: 50;
+}
+
+.image-float {
+  float: right;          /* pousse l’image à droite */
+  width: 20%;
+  margin: 1em 1em 1em 1em;   /* espace autour (haut/droite/bas/gauche) */
+  border-radius: 8px;
+}
+.image-float2 {
+  float: left;          /* pousse l’image à droite */
+  width: 20%;
+margin: 1em 1em 1em 1em;   /* espace autour (haut/droite/bas/gauche) */
+  border-radius: 8px;
 }
