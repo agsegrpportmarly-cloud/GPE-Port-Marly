@@ -37,6 +37,64 @@
     .options div{padding:8px 12px;cursor:pointer}
     .options div:hover{background:#211E37;color:#fff}
     .show{display:block}
+    /* ===== Correctifs locaux pour la page Pré-inscription ===== */
+
+/* Au cas où les variables ne sont pas définies dans Style.css */
+:root { --bleu: #0C253C; --blanc: #ffffff; }
+
+/* Bouton "Envoyer" : toujours texte clair sur fond bleu */
+.btn,
+.btn:focus,
+.btn:active {
+  background: var(--bleu, #0C253C) !important;
+  color: var(--blanc, #ffffff) !important;
+  border: 1px solid var(--bleu, #0C253C) !important;
+  outline: none;
+}
+.btn:hover { filter: brightness(1.05); }
+
+/* <select> natifs : texte sombre + états visibles */
+select {
+  color: #0f2332 !important;
+  background: #ffffff !important;
+}
+select:focus { outline: 2px solid #0C253C; outline-offset: 1px; }
+
+/* Options dans la liste déroulante (Chrome/Firefox/Edge) */
+select option {
+  color: #0f2332 !important;
+  background: #ffffff !important;
+}
+select option:hover,
+select option:checked,
+select option:focus {
+  color: #0C253C !important;
+  background: #e6eef6 !important;
+}
+
+/* Multiselect custom : options et "tags" bien lisibles */
+.multiselect .tags { background: #ffffff; color: #0f2332; }
+.multiselect .tags input { color: #0f2332; }
+.options { background: #ffffff; }
+.options div { color: #0f2332; }
+.options div:hover,
+.options div:active {
+  background: #e6eef6;
+  color: #0C253C;
+}
+
+/* Accessibilité focus champs texte */
+input:focus, textarea:focus {
+  outline: 2px solid #0C253C;
+  outline-offset: 1px;
+}
+
+/* Par sécurité si un style global met tout en blanc */
+.card, form, label, input, select, textarea, .options div, .multiselect .tag, .btn {
+  color: #0f2332 !important;
+}
+.btn { color: var(--blanc, #ffffff) !important; } /* le bouton garde le texte blanc */
+
   </style>
 </head>
 <body>
