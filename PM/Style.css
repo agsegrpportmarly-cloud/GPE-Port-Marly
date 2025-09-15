@@ -428,3 +428,20 @@ margin: 1em 1em 1em 1em;   /* espace autour (haut/droite/bas/gauche) */
   box-shadow: none !important;
 }
 
+.modal.hidden{ display:none; }
+.modal{
+  position:fixed; inset:0; display:flex; align-items:center; justify-content:center;
+  background:rgba(0,0,0,.45); z-index:9999; padding:1rem;
+}
+.modal-box{
+  width:min(520px, 100%); background:#fff; color:#0C253C;
+  border-radius:12px; padding:16px 18px; box-shadow:0 10px 30px rgba(0,0,0,.25);
+}
+.modal-box h3{ margin:.25rem 0 .5rem; }
+.modal-box label{ display:block; font-size:.95rem; margin:.5rem 0; }
+.modal-box input, .modal-box textarea{
+  width:100%; margin-top:.25rem; padding:.55rem .6rem; border:1px solid #d4dbe6; border-radius:8px;
+}
+.actions{ display:flex; gap:.5rem; justify-content:flex-end; margin-top:.75rem; }
+.actions button{ padding:.5rem .8rem; border-radius:8px; border:1px solid #d4dbe6; background:#f6f8fb; cursor:pointer; }
+.actions #access-send{ background:#0C253C; color:#fff; border-color:#0C253C; }
