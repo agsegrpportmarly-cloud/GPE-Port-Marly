@@ -445,3 +445,20 @@ margin: 1em 1em 1em 1em;   /* espace autour (haut/droite/bas/gauche) */
 .actions{ display:flex; gap:.5rem; justify-content:flex-end; margin-top:.75rem; }
 .actions button{ padding:.5rem .8rem; border-radius:8px; border:1px solid #d4dbe6; background:#f6f8fb; cursor:pointer; }
 .actions #access-send{ background:#0C253C; color:#fff; border-color:#0C253C; }
+/* Grille à 2 colonnes : contenu + sidebar */
+.home-columns{
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px; /* ajuste 360px à la largeur voulue */
+  gap: 24px;
+  align-items: stretch; /* clé : les 2 colonnes prennent la même hauteur */
+}
+
+/* Faire en sorte que le panneau de droite prenne toute la hauteur de la ligne */
+.home-aside{ display:flex; }            /* l’aside (item de la grille) s’étire déjà */
+.aside-panel{ flex:1 1 auto; }          /* le “cadre” remplit l’aside en hauteur */
+
+/* Responsive : on empile, plus besoin d’égaliser la hauteur */
+@media (max-width: 960px){
+  .home-columns{ grid-template-columns: 1fr; }
+  .aside-panel{ height: auto; }
+}
