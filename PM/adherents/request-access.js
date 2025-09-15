@@ -40,7 +40,7 @@
   };
 
   const mailtoFallback = (payload) => {
-    const to = 'inscriptions.groupe.port-marly@gmail.com';
+    const to = 'agse.grp.portmarly@gmail.com';
     const subject = 'Demande d’accès – Espace adhérents';
     const body = `Bonjour,\n\nJe souhaite obtenir un accès à l’Espace adhérents.\n\nNom: ${payload.name || ''}\nEmail: ${payload.email || ''}\nMessage: ${payload.message || ''}\n\nMerci !`;
     window.location.href = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
