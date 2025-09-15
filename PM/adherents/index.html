@@ -38,7 +38,7 @@
 <!-- Intégration -->
 <script defer src="../auth.js"></script>
 </head>
-
+<script defer src="./request-access.js"></script>
 <body>
   <header class="hero">
     
@@ -56,17 +56,18 @@
     <section id="guest">
       <p class="muted"><b>Section réservée aux adhérents.</b> Merci de vous connecter.</p>
     </section>
-
- <!-- Formulaire Netlify caché (détecté à la build) -->
+<<<<<<< HEAD
+    
+ <!-- demande connexion -->
 <form name="access-requests" netlify netlify-honeypot="bot-field" hidden>
-  <input type="hidden" name="form-name" value="access-requests">
   <input type="text" name="name">
   <input type="email" name="email">
   <textarea name="message"></textarea>
   <input type="text" name="bot-field">
+  <input type="hidden" name="form-name" value="access-requests">
 </form>
 
-<!-- Modale (une seule) -->
+<<<<<<< HEAD
 <div id="access-modal" class="modal hidden" aria-hidden="true">
   <div class="modal-box">
     <h3>Demande d’accès</h3>
@@ -88,6 +89,11 @@
     </form>
   </div>
 </div>
+    <!-- Connecté sans rôle -->
+    <section id="no-role" class="hide">
+      <p class="muted">Vous êtes connecté mais vous n’avez pas encore d’accès.</p>
+      <button id="btn-request-access" class="cta">Demander l’accès</button>
+    </section>
 
     <!-- Connecté (avec rendu selon rôles) -->
     <section id="app" class="hide">
@@ -160,102 +166,6 @@
       </fieldset>
     </section>
   </main>
-<script>
-(function(){
-  const btn = document.getElementById('btn-request-access');
-  const modal = document.getElementById('access-modal');
-  const form = document.getElementById('access-modal-form');
-  const cancel = document.getElementById('access-cancel');
-
-  // OPTIONNEL : auto-préremplir si tu as déjà l'utilisateur via Auth0/Firebase
-  // Essaie de lire un utilisateur global si présent
-  const guessUser = () => {
-    // Essaies successives : adapte selon ton code
-    try {
-      if (window.currentUser && window.currentUser.email) return { name: window.currentUser.name || "", email: window.currentUser.email };
-      if (window.authUser && window.authUser.email) return { name: window.authUser.name || "", email: window.authUser.email };
-    } catch(e){}
-    return { name: "", email: "" };
-  };
-
-  const openModal = () => {
-    const { name, email } = guessUser();
-    form.name.value = name || "";
-    form.email.value = email || "";
-    modal.classList.remove('hidden');
-    modal.setAttribute('aria-hidden', 'false');
-    form.name.focus();
-  };
-
-  const closeModal = () => {
-    modal.classList.add('hidden');
-    modal.setAttribute('aria-hidden', 'true');
-  };
-
-  const encode = (data) =>
-    Object.keys(data).map(k => encodeURIComponent(k) + '=' + encodeURIComponent(data[k])).join('&');
-
-  const submitToNetlify = async (payload) => {
-    // Envoi au endpoint statique pour Netlify Forms
-    const res = await fetch('/', {
-      method: 'POST',
-      headers: { 'Content-Type':'application/x-www-form-urlencoded' },
-      body: encode({ 'form-name': 'access-requests', ...payload })
-    });
-    if (!res.ok) throw new Error('Netlify form post failed: ' + res.status);
-    return true;
-  };
-
-  const mailtoFallback = (payload) => {
-    const to = 'inscriptions.groupe.port-marly@gmail.com'; // ← mets ici l’adresse admin
-    const subject = 'Demande d’accès – Espace adhérents';
-    const body = `Bonjour,\n\nJe souhaite obtenir un accès à l’Espace adhérents.\n\nNom: ${payload.name || ''}\nEmail: ${payload.email || ''}\nMessage: ${payload.message || ''}\n\nMerci !`;
-    window.location.href = `mailto:${to}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-  };
-
-  // Clic sur le bouton
-  if (btn) {
-    btn.addEventListener('click', (e)=>{
-      e.preventDefault();
-      openModal();
-    });
-  }
-
-  // Fermer
-  if (cancel) cancel.addEventListener('click', closeModal);
-  modal?.addEventListener('click', (e)=>{ if (e.target === modal) closeModal(); });
-
-  // Soumission modale => Netlify Forms + fallback mailto
-  form?.addEventListener('submit', async (e)=>{
-    e.preventDefault();
-    const submitBtn = document.getElementById('access-send');
-    submitBtn.disabled = true; submitBtn.textContent = 'Envoi...';
-
-    const payload = {
-      name: form.name.value.trim(),
-      email: form.email.value.trim(),
-      message: form.message.value.trim()
-    };
-
-    try {
-      await submitToNetlify(payload);
-      submitBtn.textContent = 'Envoyé ✔';
-      // petit feedback
-      setTimeout(()=>{
-        alert("Votre demande a bien été envoyée. Nous revenons vers vous rapidement.");
-        closeModal();
-        submitBtn.disabled = false; submitBtn.textContent = 'Envoyer';
-        form.reset();
-      }, 150);
-    } catch(err){
-      console.warn('Netlify Forms indisponible, fallback mailto.', err);
-      mailtoFallback(payload);
-      submitBtn.disabled = false; submitBtn.textContent = 'Envoyer';
-      closeModal();
-    }
-  });
-})();
-</script>
 
   <footer>
     © AGSE – Groupes de Port-Marly <img src="../images/Logo_GS.png" alt="Logo AGSE" width="120" height="auto">
