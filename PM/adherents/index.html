@@ -56,15 +56,17 @@
     <section id="guest">
       <p class="muted"><b>Section réservée aux adhérents.</b> Merci de vous connecter.</p>
     </section>
- <!-- demande connexion -->
+
+ <!-- Formulaire Netlify caché (détecté à la build) -->
 <form name="access-requests" netlify netlify-honeypot="bot-field" hidden>
+  <input type="hidden" name="form-name" value="access-requests">
   <input type="text" name="name">
   <input type="email" name="email">
   <textarea name="message"></textarea>
   <input type="text" name="bot-field">
-  <input type="hidden" name="form-name" value="access-requests">
 </form>
 
+<!-- Modale (une seule) -->
 <div id="access-modal" class="modal hidden" aria-hidden="true">
   <div class="modal-box">
     <h3>Demande d’accès</h3>
@@ -86,41 +88,7 @@
     </form>
   </div>
 </div>
-    <!-- Connecté sans rôle -->
-    <section id="no-role" class="hide">
-      <p class="muted">Vous êtes connecté mais vous n’avez pas encore d’accès.</p>
-      <button id="btn-request-access" class="cta">Demander l’accès</button>
-    </section>
- <!-- demande connexion -->
-<form name="access-requests" netlify netlify-honeypot="bot-field" hidden>
-  <input type="text" name="name">
-  <input type="email" name="email">
-  <textarea name="message"></textarea>
-  <input type="text" name="bot-field">
-  <input type="hidden" name="form-name" value="access-requests">
-</form>
 
-<div id="access-modal" class="modal hidden" aria-hidden="true">
-  <div class="modal-box">
-    <h3>Demande d’accès</h3>
-    <p>Indique tes coordonnées pour que l’équipe valide ton accès.</p>
-    <form id="access-modal-form">
-      <label>Nom et prénom
-        <input type="text" name="name" required>
-      </label>
-      <label>Adresse e-mail
-        <input type="email" name="email" required>
-      </label>
-      <label>Message (facultatif)
-        <textarea name="message" rows="3" placeholder="Unité, rôle, etc."></textarea>
-      </label>
-      <div class="actions">
-        <button type="button" id="access-cancel">Annuler</button>
-        <button type="submit" id="access-send">Envoyer</button>
-      </div>
-    </form>
-  </div>
-</div>
     <!-- Connecté (avec rendu selon rôles) -->
     <section id="app" class="hide">
       <p class="muted" id="welcome"></p>
