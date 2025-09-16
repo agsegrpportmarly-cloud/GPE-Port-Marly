@@ -576,7 +576,7 @@ header.hero::after{
 /* ==== HERO – version unifiée et fiable ==== */
 :root{
   /* Chemin correct de TON fichier d'en-tête (respecte la casse et l’extension) */
-  --hero-img: url("/images/Header_PM.png");   /* ← si ton image est /images/Header_PM.png */
+  --hero-img: url("Header_PM.png");   /* ← si ton image est /images/Header_PM.png */
   --hero-h-desktop: 340px;
   --hero-h-mobile: 220px;
 }
@@ -634,7 +634,7 @@ header.hero > nav a:focus-visible{ outline: 2px solid #fff; outline-offset: 2px;
 
 /* 1) Référence l'image UNE seule fois (mets le bon chemin + la bonne casse) */
 :root{
-  --hero-img: url("/images/Header_PM.png"); /* ← adapte si besoin */
+  --hero-img: url("Header_PM.png"); /* ← adapte si besoin */
 }
 
 /* 2) On neutralise les anciennes définitions qui gênaient */
