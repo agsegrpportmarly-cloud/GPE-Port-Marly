@@ -630,3 +630,52 @@ header.hero > nav a{
   border:1px solid rgba(255,255,255,.25);
 }
 header.hero > nav a:focus-visible{ outline: 2px solid #fff; outline-offset: 2px; }
+/* ==== HERO responsive sans modifier le HTML ==== */
+
+/* 1) Référence l'image UNE seule fois (mets le bon chemin + la bonne casse) */
+:root{
+  --hero-img: url("/images/Header_PM.png"); /* ← adapte si besoin */
+}
+
+/* 2) On neutralise les anciennes définitions qui gênaient */
+header.hero{
+  background: none !important;
+  position: relative !important;
+  margin: 0 !important;
+  padding: 0 !important;
+}
+header.hero::after{ content:none !important; } /* s'il existait un voile précédent */
+header.hero > nav{
+  position: sticky; top: 0; z-index: 50; /* nav lisible au scroll */
+  background: rgba(12,37,60,.92);
+  -webkit-backdrop-filter: saturate(120%) blur(8px);
+  backdrop-filter: saturate(120%) blur(8px);
+  border-bottom: 1px solid rgba(255,255,255,.12);
+}
+
+/* 3) La partie “image” du hero, responsive : AVANT le nav */
+header.hero::before{
+  content: "";
+  display: block;
+
+  /* Hauteur responsive :
+     - min 180px
+     - “pref” proportionnelle à la largeur de la fenêtre (32vw)
+     - max 420px (à ajuster si tu veux plus grand)
+  */
+  height: clamp(180px, 32vw, 420px);
+
+  /* Image */
+  background-image: var(--hero-img), url("Header_PM.png"); /* fallback si le 1er chemin rate */
+  background-size: cover;
+  background-position: center 35%;
+  background-repeat: no-repeat;
+}
+
+/* 4) Mobile : un peu plus compact si tu veux */
+@media (max-width: 640px){
+  header.hero::before{
+    height: clamp(160px, 42vw, 320px);
+    background-position: center 38%;
+  }
+}
