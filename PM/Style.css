@@ -573,3 +573,60 @@ header.hero::after{
   background: linear-gradient(180deg, rgba(12,37,60,.35), transparent 70%);
   pointer-events:none;
 }
+/* ==== HERO – version unifiée et fiable ==== */
+:root{
+  /* Chemin correct de TON fichier d'en-tête (respecte la casse et l’extension) */
+  --hero-img: url("/images/Header_PM.png");   /* ← si ton image est /images/Header_PM.png */
+  --hero-h-desktop: 340px;
+  --hero-h-mobile: 220px;
+}
+
+/* Désactive l'ancien "ghost block" si présent */
+header.hero::before{ content: none !important; display: none !important; }
+
+/* Le header devient une grille : 1ère ligne = image, 2e = nav (donc nav sous l’image) */
+header.hero{
+  display: grid !important;
+  grid-template-rows: var(--hero-h-desktop) auto !important;
+  margin: 0 !important;
+  padding: 0 !important;
+  position: relative !important;
+
+  /* Image de fond normalisée */
+  background-image: var(--hero-img) !important;
+  background-position: center 35% !important;
+  background-size: cover !important;
+  background-repeat: no-repeat !important;
+  background-color: var(--bleu) !important;
+}
+
+/* Mobile : hauteur d’image plus compacte */
+@media (max-width: 640px){
+  header.hero{
+    grid-template-rows: var(--hero-h-mobile) auto !important;
+  }
+}
+
+/* Le NAV occupe la 2e ligne et devient sticky quand on scrolle */
+header.hero > nav{
+  grid-row: 2 / 3 !important;
+  position: sticky !important;
+  top: 0 !important;
+  z-index: 50 !important;
+
+  /* garde ton style actuel mais solide et lisible */
+  display: flex; gap: 12px; overflow-x: auto; white-space: nowrap;
+  padding: 10px 16px; margin: 0; border-radius: 0;
+  background: rgba(12,37,60,.92);
+  border-bottom: 1px solid rgba(255,255,255,.12);
+  -webkit-backdrop-filter: saturate(120%) blur(8px);
+  backdrop-filter: saturate(120%) blur(8px);
+}
+
+/* Liens du menu : ton style + accessibilité focus */
+header.hero > nav a{
+  color:#fff; text-decoration:none; font-weight:700;
+  padding: 8px 14px; border-radius: 999px;
+  border:1px solid rgba(255,255,255,.25);
+}
+header.hero > nav a:focus-visible{ outline: 2px solid #fff; outline-offset: 2px; }
