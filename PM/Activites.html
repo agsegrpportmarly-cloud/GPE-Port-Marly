@@ -1,47 +1,144 @@
 <!doctype html>
 <html lang="fr">
 <head>
-  <meta charset="utf-8">
-  <title>Activités – Scouts d’Europe Port-Marly</title>
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <link href="Style.css" rel="stylesheet">
+  <meta charset="utf-8" />
+  <title>Nos unités</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./Style.css" />
+  <style>
+    /* ==== additions design accueil ==== */
+    :root{
+      --accent:#0ea5e9;           /* bleu clair pour accents */
+      --glass:rgba(255,255,255,.06);
+      --glass-b:#ffffff16;
+    }
+    main.home{max-width:auto;margin:24px auto;padding:0 16px;display:fixed ;grid-template-columns:1fr 1fr;gap:22px}
+    @media (max-width:980px){ main.home{grid-template-columns:1fr} }
 
-  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
+    /* bloc titre intro */
+    .intro{
+      background:linear-gradient(180deg,#0f2b44 0%, #0c253b 100%);
+      border:1px solid var(--glass-b);
+      border-radius:16px; box-shadow:0 20px 60px rgba(0,0,0,.25);
+      padding:20px 18px; color:#e8f3fb
+    }
+    .intro h1{margin:.2rem 0 6px; font-size:clamp(22px,2.3vw,30px)}
+    .intro p{margin:0; opacity:.9}
+
+    /* cartes rubriques */
+    .hero-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:18px}
+    @media (max-width:980px){ .hero-grid{grid-template-columns:1fr} }
+    .card-link{
+      position:relative; overflow:hidden;
+      display:block; padding:18px 16px; border-radius:18px;
+      background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+      border:1px solid var(--glass-b);
+      box-shadow:0 10px 30px rgba(0,0,0,.25);
+      transition:transform .2s ease, box-shadow .2s ease, background .3s;
+      color:var(--blanc);
+    }
+    .card-link:hover{ transform:translateY(-3px); box-shadow:0 18px 36px rgba(0,0,0,.35); }
+    .card-link h3{margin:8px 0 6px;font-size:clamp(18px,1.6vw,22px)}
+    .card-link p{margin:0; opacity:.85; font-size:15px}
+    .badge{
+      position:absolute; top:14px; right:14px;
+      padding:.25rem .5rem; border-radius:999px;
+      font-size:12px; font-weight:700;
+      background:rgba(14,165,233,.18); border:1px solid rgba(14,165,233,.35); color:#bfe9ff
+    }
+    .icon{
+      width:44px;height:44px;border-radius:12px;display:grid;place-items:center;
+      background:rgba(14,165,233,.12); border:1px solid rgba(14,165,233,.25); margin-bottom:8px
+    }
+    .icon svg{width:26px;height:26px;opacity:.95}
+
+    /* colonne latérale : sites amis */
+    .aside{
+      position:relative;
+      background:linear-gradient(180deg,#0f2b44 0%, #0c253b 100%);
+      border:1px solid var(--glass-b);
+      border-radius:16px; padding:18px; color:#e8f3fb;
+      box-shadow:0 20px 60px rgba(0,0,0,.25);
+    }
+    .aside h2{margin:0 0 10px;font-size:20px}
+    .friends{display:grid;grid-template-columns:1fr;gap:12px}
+    .site-card{
+      display:grid;grid-template-columns:56px 1fr;gap:12px;align-items:center;
+      padding:10px;border-radius:14px;background:rgba(255,255,255,.03);
+      border:1px solid var(--glass-b); transition:transform .18s, background .2s
+    }
+    .site-card:hover{ transform:translateY(-2px); background:rgba(255,255,255,.05) }
+    .site-card img{width:56px;height:56px;object-fit:contain;border-radius:10px;background:#fff}
+    .site-card span{display:block;line-height:1.2}
+    .site-card small{opacity:.8}
+
+    /* mini-switcher réutilisable (pour les pages internes) */
+    .section-switcher{
+      display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 18px
+    }
+    .section-switcher a{
+      padding:8px 12px;border-radius:999px;
+      background:rgba(255,255,255,.06); border:1px solid var(--glass-b);
+      color:#eaf6ff;font-weight:700; letter-spacing:.2px; transition:.2s
+    }
+    .section-switcher a:hover{ background:rgba(255,255,255,.1) }
+    .section-switcher .active{ background:rgba(14,165,233,.18); border-color:rgba(14,165,233,.4); color:#bfe9ff }
+  </style>
 </head>
+
 <body>
-    <header class="hero">
+  <!-- ton header.hero + nav existants -->
+<header class="hero" id="header_PM">
+  <nav>
+    <a href="/Index.html">Accueil</a>
+    <a href="/Activites.html">Nos unités</a>
+    <a href="/adherents/">Espace adhérents</a>
+    <a href="/preinscriptions.html">Pré-Inscriptions</a>
+  </nav>
+</header>
 
-<nav>
-  <a href="../Index.html">Accueil</a>
-  <a href="../Activites.html">Nos unités</a>
-  <a href="../adherents/index.html">Espace adhérents</a>
-  <a href="../preinscriptions.html">Pré-Inscriptions</a>
-</nav>
+  <main class="home">
+    <section>
+      <div class="intro">
+        <h1>La méthode/h1>
+        <p>Pédagogie par la progression, nature et responsabilité. Selon leur âge, les jeunes sont répartis dans 3 branches, qui compoertent chacune une section fille et une section garçon</p>
+<section></section>
+        <!-- cartes principales -->
+        <div class="hero-grid">
+          <a class="card-link" href="/Nos-groupes.html" aria-label="Nos groupes">
+            <span class="badge">En savoir plus</span>
+              <div class="icon" aria-hidden="true">
+                <img src="/assets/loup2.png" alt="Icône croix scoute" height="40px">
+                  </div>
+            <h3>La branche jaune</h3>
+            <p>Pour les enfants de 8 à 12 ans</p>
+          </a>
 
-  </header>
+          <a class="card-link" href="/Spiritualite.html" aria-label="Notre spiritualité">
+            <span class="badge">En savoir plus</span>
+              <div class="icon" aria-hidden="true">
+                <img src="/assets/scoutguide.png" alt="Icône sacre coeur" height="40px">
+                  </div>
+            <h3>La branche verte, pour les jeunes de 12 à 17 ans</h3>
+            <p>Racines, prière, et chemins de croissance.</p>
+          </a>
 
-<main class="container section">
-  <div class="grid cols-3">
-    <div class="card">
-      <img src="images/loup.png" alt="Louveteaux / Louvettes" style="width: 50%;border-radius:8px" class="image-float2">
-      <h3>Louveteaux / Louvettes</h3>
-      <p>8-12 ans • Découverte, jeux, veillées, imaginaire de la jungle...</p>
-    </div>
-    <div class="card">
-      <img src="images/scout.png" alt="Scouts / Guides" style="width: 50%;border-radius:8px" class="image-float2">
-      <h3>Scouts / Guides</h3>
-      <p>12-17 ans • Patrouilles, techniques scoutes, progression, responsabilité...</p>
-    </div>
-    <div class="card">
-      <img src="images/route.png" alt="Routiers / Guides-Aînées" style="width: 50%;border-radius:8px" class="image-float2">
-      <h3>Routiers / Guides-Aînées</h3>
-      <p>17+ • Service, marche, approfondissement spirituel et engagement...</p>
-    </div>
+          <a class="card-link" href="/Methode-AGSE.html" aria-label="La méthode AGSE">
+              <span class="badge">En savoir plus</span>
+            <div class="icon" aria-hidden="true">
+    <!-- Remplace l’ancien <svg>…</svg> par ceci -->
+              <img src="/assets/route2.png" alt="Icône méthode AGSE">
+                </div>
+              <h3>La branche rouge</h3>
+              <p>A partir de 17 ans et pour la vie...</p>
+                </a>
 
-  </div>
+        </div>
 
-
-</main>
+          </div>
+        </section>
+        </main>
 
   <footer>
     © AGSE – Groupes de Port-Marly <img src="../images/Logo_GS.png" alt="Logo AGSE" width="120" height="auto">
