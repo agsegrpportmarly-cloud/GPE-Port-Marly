@@ -1,0 +1,561 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <title>Accueil – Groupes Scouts d’Europe Port-Marly</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="./Style.css" />
+  <style>
+    /* ==== additions design accueil ==== */
+    :root{
+      --accent:#0ea5e9;           /* bleu clair pour accents */
+      --glass:rgba(255,255,255,.06);
+      --glass-b:#ffffff16;
+      --line:#dfe6ee;
+    }
+    main.home{max-width:1200px;margin:24px auto;padding:0 16px;display:fixe;grid-template-columns:2fr 1fr;gap:22px}
+    @media (max-width:980px){ main.home{grid-template-columns:1fr} }
+
+    /* bloc titre intro */
+    .intro{
+      background:linear-gradient(180deg,#0f2b44 0%, #0c253b 100%);
+      border:1px solid var(--glass-b);
+      border-radius:16px; box-shadow:0 20px 60px rgba(0,0,0,.25);
+      padding:20px 18px; color:#e8f3fb
+    }
+    .intro h1{margin:.2rem 0 6px; font-size:clamp(22px,2.3vw,30px)}
+    .intro p{margin:0; opacity:.9}
+
+    /* cartes rubriques */
+    .hero-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:18px}
+    @media (max-width:980px){ .hero-grid{grid-template-columns:1fr} }
+    .card-link{
+      position:relative; overflow:hidden;
+      display:block; padding:18px 16px; border-radius:18px;
+      background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+      border:1px solid var(--glass-b);
+      box-shadow:0 10px 30px rgba(0,0,0,.25);
+      transition:transform .2s ease, box-shadow .2s ease, background .3s;
+      color:var(--blanc);
+    }
+    .card-link:hover{ transform:translateY(-3px); box-shadow:0 18px 36px rgba(0,0,0,.35); }
+    .card-link h3{margin:8px 0 6px;font-size:clamp(18px,1.6vw,22px)}
+    .card-link p{margin:0; opacity:.85; font-size:15px}
+    .badge{
+      position:absolute; top:14px; right:14px;
+      padding:.25rem .5rem; border-radius:999px;
+      font-size:12px; font-weight:700;
+      background:rgba(14,165,233,.18); border:1px solid rgba(14,165,233,.35); color:#bfe9ff
+    }
+    .icon{
+      width:44px;height:44px;border-radius:12px;display:grid;place-items:center;
+      background:rgba(14,165,233,.12); border:1px solid rgba(14,165,233,.25); margin-bottom:8px
+    }
+    .icon svg{width:26px;height:26px;opacity:.95}
+
+    /* colonne latérale : sites amis */
+    .aside{
+      position:relative;
+      background:linear-gradient(180deg,#0f2b44 0%, #0c253b 100%);
+      border:1px solid var(--glass-b);
+      border-radius:16px; padding:18px; color:#e8f3fb;
+      box-shadow:0 20px 60px rgba(0,0,0,.25);
+    }
+    .aside h2{margin:0 0 10px;font-size:20px}
+    .friends{display:grid;grid-template-columns:1fr;gap:12px}
+    .site-card{
+      display:grid;grid-template-columns:56px 1fr;gap:12px;align-items:center;
+      padding:10px;border-radius:14px;background:rgba(255,255,255,.03);
+      border:1px solid var(--glass-b); transition:transform .18s, background .2s
+    }
+    .site-card:hover{ transform:translateY(-2px); background:rgba(255,255,255,.05) }
+    .site-card img{width:56px;height:56px;object-fit:contain;border-radius:10px;background:#fff}
+    .site-card span{display:block;line-height:1.2}
+    .site-card small{opacity:.8}
+
+    /* mini-switcher réutilisable (pour les pages internes) */
+    .section-switcher{
+      display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 18px
+    }
+    .section-switcher a{
+      padding:8px 12px;border-radius:999px;
+      background:rgba(255,255,255,.06); border:1px solid var(--glass-b);
+      color:#eaf6ff;font-weight:700; letter-spacing:.2px; transition:.2s
+    }
+    .section-switcher a:hover{ background:rgba(255,255,255,.1) }
+    .section-switcher .active{ background:rgba(14,165,233,.18); border-color:rgba(14,165,233,.4); color:#bfe9ff }
+     main.home{max-width:1200px;margin:24px auto;padding:0 16px;display:fixe;grid-template-columns:2fr 1fr;gap:22px}
+    @media (max-width:980px){ main.home{grid-template-columns:1fr} }
+
+    /* bloc titre intro */
+    .intro{
+      background:linear-gradient(180deg,#0f2b44 0%, #0c253b 100%);
+      border:1px solid var(--glass-b);
+      border-radius:16px; box-shadow:0 20px 60px rgba(0,0,0,.25);
+      padding:20px 18px; color:#e8f3fb
+    }
+    .intro h1{margin:.2rem 0 6px; font-size:clamp(22px,2.3vw,30px)}
+    .intro p{margin:0; opacity:.9}
+
+    /* cartes rubriques */
+    .hero-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:18px}
+    @media (max-width:980px){ .hero-grid{grid-template-columns:1fr} }
+    .card-link{
+      position:relative; overflow:hidden;
+      display:block; padding:18px 16px; border-radius:18px;
+      background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+      border:1px solid var(--glass-b);
+      box-shadow:0 10px 30px rgba(0,0,0,.25);
+      transition:transform .2s ease, box-shadow .2s ease, background .3s;
+      color:var(--blanc);
+    }
+    .card-link:hover{ transform:translateY(-3px); box-shadow:0 18px 36px rgba(0,0,0,.35); }
+    .card-link h3{margin:8px 0 6px;font-size:clamp(18px,1.6vw,22px)}
+    .card-link p{margin:0; opacity:.85; font-size:15px}
+    .badge{
+      position:absolute; top:14px; right:14px;
+      padding:.25rem .5rem; border-radius:999px;
+      font-size:12px; font-weight:700;
+      background:rgba(14,165,233,.18); border:1px solid rgba(14,165,233,.35); color:#bfe9ff
+    }
+    .icon{
+      width:44px;height:44px;border-radius:12px;display:grid;place-items:center;
+      background:rgba(14,165,233,.12); border:1px solid rgba(14,165,233,.25); margin-bottom:8px
+    }
+    .icon svg{width:26px;height:26px;opacity:.95}
+
+    /* colonne latérale : sites amis */
+    .aside{
+      position:relative;
+      background:linear-gradient(180deg,#0f2b44 0%, #0c253b 100%);
+      border:1px solid var(--glass-b);
+      border-radius:16px; padding:18px; color:#e8f3fb;
+      box-shadow:0 20px 60px rgba(0,0,0,.25);
+    }
+    .aside h2{margin:0 0 10px;font-size:20px}
+    .friends{display:grid;grid-template-columns:1fr;gap:12px}
+    .site-card{
+      display:grid;grid-template-columns:56px 1fr;gap:12px;align-items:center;
+      padding:10px;border-radius:14px;background:rgba(255,255,255,.03);
+      border:1px solid var(--glass-b); transition:transform .18s, background .2s
+    }
+    .site-card:hover{ transform:translateY(-2px); background:rgba(255,255,255,.05) }
+    .site-card img{width:56px;height:56px;object-fit:contain;border-radius:10px;background:#fff}
+    .site-card span{display:block;line-height:1.2}
+    .site-card small{opacity:.8}
+
+    /* mini-switcher réutilisable (pour les pages internes) */
+    .section-switcher{
+      display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 18px
+    }
+    .section-switcher a{
+      padding:8px 12px;border-radius:999px;
+      background:rgba(255,255,255,.06); border:1px solid var(--glass-b);
+      color:#eaf6ff;font-weight:700; letter-spacing:.2px; transition:.2s
+    }
+    .section-switcher a:hover{ background:rgba(255,255,255,.1) }
+    .section-switcher .active{ background:rgba(14,165,233,.18); border-color:rgba(14,165,233,.4); color:#bfe9ff }
+    main.home{max-width:1200px;margin:24px auto;padding:0 16px;display:fixe;grid-template-columns:2fr 1fr;gap:22px}
+    @media (max-width:980px){ main.home{grid-template-columns:1fr} }
+
+    /* bloc titre intro */
+    .intro{
+      background:linear-gradient(180deg,#0f2b44 0%, #0c253b 100%);
+      border:1px solid var(--glass-b);
+      border-radius:16px; box-shadow:0 20px 60px rgba(0,0,0,.25);
+      padding:20px 18px; color:#e8f3fb
+    }
+    .intro h1{margin:.2rem 0 6px; font-size:clamp(22px,2.3vw,30px)}
+    .intro p{margin:0; opacity:.9}
+
+    /* cartes rubriques */
+    .hero-grid{display:grid;grid-template-columns:repeat(1,1fr);gap:16px;margin-top:18px}
+    @media (max-width:980px){ .hero-grid{grid-template-columns:1fr} }
+    .hero-grid2{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;margin-top:18px}
+    @media (max-width:980px){ .hero-grid{grid-template-columns:2fr} }
+    .hero-grid3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:18px}
+    @media (max-width:980px){ .hero-grid{grid-template-columns:3fr} }    
+    .hero-grid4{display:grid;grid-template-columns:repeat(4,1fr);gap:16px;margin-top:18px}
+    @media (max-width:980px){ .hero-grid{grid-template-columns:4fr} } 
+
+    .card-link{
+      position:relative; overflow:hidden;
+      display:block; padding:18px 16px; border-radius:18px;
+      background:linear-gradient(135deg,rgba(255,255,255,.06),rgba(255,255,255,.02));
+      border:1px solid var(--glass-b);
+      box-shadow:0 10px 30px rgba(0,0,0,.25);
+      transition:transform .2s ease, box-shadow .2s ease, background .3s;
+      color:var(--blanc);
+    }
+    .card-link:hover{ transform:translateY(-3px); box-shadow:0 18px 36px rgba(0,0,0,.35); }
+    .card-link h3{margin:8px 0 6px;font-size:clamp(18px,1.6vw,22px)}
+    .card-link p{margin:0; opacity:.85; font-size:15px}
+    .badge{
+      position:absolute; top:14px; right:14px;
+      padding:.25rem .5rem; border-radius:999px;
+      font-size:12px; font-weight:700;
+      background:rgba(14,165,233,.18); border:1px solid rgba(14,165,233,.35); color:#bfe9ff
+    }
+    .icon{
+      width:44px;height:44px;border-radius:12px;display:grid;place-items:center;
+      background:rgba(14,165,233,.12); border:1px solid rgba(14,165,233,.25); margin-bottom:8px
+    }
+    .icon svg{width:26px;height:26px;opacity:.95}
+
+    /* colonne latérale : sites amis */
+    .aside{
+      position:relative;
+      background:linear-gradient(180deg,#0f2b44 0%, #0c253b 100%);
+      border:1px solid var(--glass-b);
+      border-radius:16px; padding:18px; color:#e8f3fb;
+      box-shadow:0 20px 60px rgba(0,0,0,.25);
+    }
+    .aside h2{margin:0 0 10px;font-size:20px}
+    .friends{display:grid;grid-template-columns:1fr;gap:12px}
+    .site-card{
+      display:grid;grid-template-columns:56px 1fr;gap:12px;align-items:center;
+      padding:10px;border-radius:14px;background:rgba(255,255,255,.03);
+      border:1px solid var(--glass-b); transition:transform .18s, background .2s
+    }
+    .site-card:hover{ transform:translateY(-2px); background:rgba(255,255,255,.05) }
+    .site-card img{width:56px;height:56px;object-fit:contain;border-radius:10px;background:#fff}
+    .site-card span{display:block;line-height:1.2}
+    .site-card small{opacity:.8}
+    .site-card2{
+      display:grid;gap:12px;align-items:center;
+      padding:10px;border-radius:14px;background:rgba(255,255,255,.03);
+      border:1px solid var(--glass-b); transition:transform .18s, background .2s
+    }
+    .site-card2:hover{ transform:translateY(-2px); background:rgba(255,255,255,.05) }
+    .site-card2 img{width:56px;height:56px;object-fit:contain;border-radius:10px;background:#fff}
+    .site-card2 span{display:block;line-height:1.2}
+    .site-card2 small{opacity:.8}
+    /* mini-switcher réutilisable (pour les pages internes) */
+    .section-switcher{
+      display:flex;gap:10px;flex-wrap:wrap;margin:8px 0 18px
+    }
+    .section-switcher a{
+      padding:8px 12px;border-radius:999px;
+      background:rgba(255,255,255,.06); border:1px solid var(--glass-b);
+      color:#eaf6ff;font-weight:700; letter-spacing:.2px; transition:.2s
+    }
+    .section-switcher a:hover{ background:rgba(255,255,255,.1) }
+    .section-switcher .active{ background:rgba(14,165,233,.18); border-color:rgba(14,165,233,.4); color:#bfe9ff }
+    .timeline2{border-left:3px solid var(--line);padding-left:1rem}
+    .timeline2 li{margin:.35rem 0}
+    th,td{border:1px solid var(--line);padding:.55rem .6rem;vertical-align:top}
+    th{background:#034586;text-align:left}
+ </style>
+</head>
+
+<body>
+  <!-- ton header.hero + nav existants -->
+  <header class="hero">
+   
+    <nav>
+      <a href="/Index.html">Accueil</a>
+      <a href="/Activites.html">La pédagogie</a>
+      <a href="/adherents/">Espace adhérents</a>
+      <a href="/preinscriptions.html">Pré-Inscriptions</a>
+    </nav>
+  </header>
+<nav class="section-switcher">
+  <a href="/brefhistorique.html"class="active">Bref historique</a>
+  <a href="/Les_scouts_de_PM.html" >Le scoutisme à Port-Marly</a>
+  <a href="/Notre_spiritualite.html">Notre spiritualité</a>
+</nav>
+  <main class="home">
+
+<section class="historique-port-marly" id="historique-port-marly">
+  <h1>Histoire du scoutisme (1907 → 2025) : des origines à l’AGSE</h1>
+<p class="lead">Un parcours détaillé qui relie <strong>Robert Baden‑Powell</strong> (B‑P) et le camp de <strong>Brownsea (1907)</strong>, la naissance du <strong>scoutisme catholique</strong> (P. <strong>Jacques Sevin</strong>, chanoine <strong>Cornette</strong>, <strong>Édouard de Macedo</strong>, <strong>Paul Coze</strong>…), les figures inspirantes (<strong>Guy de Larigaudie</strong>, <strong>Michel Menu</strong>, « <strong>Lézard</strong> »), jusqu’à la <strong>création des Scouts d’Europe</strong> (UIGSE‑FSE) et l’<strong>organisation actuelle de l’AGSE</strong> en 2025.</p>
+
+  <div class="legend">
+
+  </div>
+  <div class="grid"
+  <aside class="units-today">
+    <h2>1 - Aux origines (1907–1918)</h2>
+    <div class="grid">
+      <div class="callout">
+        <h3>Le laboratoire de Brownsea</h3>
+        <p>Du <strong>1ᵉʳ au 8 août 1907</strong>, B‑P réunit <strong>20 garçons</strong> sur <em>Brownsea Island</em> (Dorset). Il les répartit en <em>patrouilles</em> (Wolves, Ravens, Bulls, Curlews), confie des responsabilités aux <em>chefs de patrouille</em>, met en scène le <em>jeu</em>, la <em>progression</em> et la <em>vie dans la nature</em>. La dynamique d’équipe et la <em>responsabilité des jeunes</em> sont fixées dès l’origine.</p>
+  </aside>
+  <ol class="timeline">
+    
+    <li class="event">
+      <div class="year">1908</div>
+      <div class="rail-dot" aria-hidden="true"></div>
+      <div class="content">
+        <p>parution de <em>Scouting for Boys</em> (en 6 livraisons, puis en volume). Le manuel devient une « machine à essaimer » : des troupes naissent spontanément.</p>
+      </div>
+    </li>
+
+   
+    <li class="event">
+      <div class="year">1916</div>
+      <div class="rail-dot" aria-hidden="true"></div>
+      <div class="content">
+        <p>création des <em>Wolf Cubs</em> (louveteaux) avec l’imaginaire du <em>Livre de la Jungle</em>.</p>
+      </div>
+    </li>
+
+   
+    <li class="event">
+      <div class="year">1919</div>
+      <div class="rail-dot" aria-hidden="true"></div>
+      <div class="content">
+        <p>à Gilwell Park, B‑P lance la <em>Wood Badge</em>, formation des chefs ; naissance d’une culture pédagogique commune.</p>
+      </div>
+    </li>
+<div class="aside">
+        <h3>Signes & symboles</h3>
+        <p class="small">
+          <span ><u>Poignée de main gauche</u></span> : récit populaire rattachant le geste aux guerriers ashantis déposant leur bouclier (bras gauche) pour saluer « de la main des braves ». 
+          <br><span><u>Perles de bois</u></span> : la <em>Wood Badge</em> se rattache symboliquement à un collier du chef zoulou Dinizulu. 
+          <br><span><u>Staff & foulard</u></span> : outils de route et de fraternité, hérités du campisme et des expéditions.</p>
+      
+    <p class="note muted">Clés de méthode : promesse et loi, système des patrouilles, progression personnelle, vie d’équipe, service, jeu, campisme, <em>learning by doing</em>.</p>
+
+      <br>
+    <div class="quote small">« La main gauche est la main des braves » : la poignée de main scoute, popularisée par B‑P à partir d’un récit ashanti, symbolise la confiance et la fraternité (on dépose son bouclier pour saluer l’autre).</div>
+</div>
+
+    
+    </ol>
+   
+      <div >
+        <h2>2 - La greffe française & le scoutisme catholique (1913–1939)</h2>
+  <ol class="timeline">
+    <li class="event">
+      <div class="year">1913</div>
+      <div class="rail-dot" aria-hidden="true"></div>
+      <div class="content">
+        <h3>Rencontrer, traduire, intégrer</h3>
+        <p>Le jésuite <strong>Jacques Sevin</strong> rencontre B‑P, observe la méthode et mûrit un projet : <em>assumer toute la pédagogie de B‑P</em> en l’enracinant clairement dans la foi catholique. Après la guerre, il publie <em>Le Scoutisme</em> (1922) et rédige textes, prières et cérémonial qui marqueront durablement la pédagogie francophone.</p>
+      </div>
+    </li>
+    <li class="event">
+      <div class="year">1920</div>
+      <div class="rail-dot" aria-hidden="true"></div>
+      <div class="content">
+        <h3>Naissance des Scouts de France (1920)</h3>
+        <p>Fondation des <strong>Scouts de France</strong> (SdF) autour de <strong>Jacques Sevin</strong>, du <strong>chanoine Antoine‑Louis Cornette</strong>, d’<strong>Édouard de Macedo</strong> et de <strong>Paul Coze</strong>. Le général <em>de Maud’huy</em> accepte la présidence, gage de crédibilité publique. Très vite : premiers camps nationaux à <strong>Chamarande</strong> (1922–1951), structuration des branches (<em>louveteaux</em>, <em>éclaireurs</em>, <em>route</em>), diffusion rapide dans les diocèses et patronages.</p>
+      </div>
+    </li>
+  </ol>
+       <div class="aside">
+         
+          <h3>Rôle des fondateurs catholiques</h3>
+        <ul>
+          <li><strong>Jacques Sevin</strong> : théoricien et <em>passeur</em> entre B‑P et le monde catholique ; mise en musique (au sens propre) de la promesse/loi, adaptation liturgique, camp‑écoles.</li>
+          <li><strong>Chanoine Cornette</strong> : artisan de l’acceptation ecclésiale, réseau de patronages, gouvernance et aumônerie.</li>
+          <li><strong>Édouard de Macedo</strong> : organisateur, premiers cadres nationaux, pionnier des unités <em>marines</em> et de la <em>Route</em>.</li>
+          <li><strong>Paul Coze</strong> : animateur et iconographe ; contribue à l’esthétique scoute (revues, insignes), au rayonnement culturel.</li>
+        </ul>
+
+
+         
+        <h3>Avant‑guerre : un rayonnement</h3>
+        <p>Dans les années 1930, le scoutisme catholique français s’enracine : camps, grands rassemblements, premières œuvres sociales. La <em>méthode par la patrouille</em> porte des fruits éducatifs visibles ; la culture scoute (chants, récits, illustrateurs comme <em>Pierre Joubert</em>) s’installe dans l’imaginaire collectif.</p>
+
+       </div>
+
+ 
+        <h2>3 - Les figures marquantes du scoutisme</h2>
+          <div class="hero-grid3"
+              <div>
+          <a class="card-link" href="/Methode-AGSE.html" aria-label="La méthode AGSE">
+              <span class="badge">En savoir plus</span>
+            <div class="icon" aria-hidden="true">
+              <img src="/assets/BP.png" alt="Icône méthode AGSE"height="40px">
+                </div>
+        <h3>Robert Baden‑Powell (1857–1941)</h3>
+        <p>Fondateur et pédagogue : synthèse d’expériences (Mafeking, observation, campisme) et d’inspirations (Seton, Smith). Il formalise la méthode, organise la formation des chefs (Gilwell, 1919) et promeut l’international (Jamborees dès 1920).</p>
+          </a>
+        
+          <a class="card-link" href="/Methode-AGSE.html" aria-label="La méthode AGSE">
+              <span class="badge">En savoir plus</span>
+            <div class="icon" aria-hidden="true">
+              <img src="/assets/route2.png" alt="Icône méthode AGSE">
+                </div>
+        <h3>P. Jacques Sevin, s.j. (1882–1951)</h3>
+        <p>« Père du scoutisme catholique » : il intègre explicitement la vie sacramentelle, la prière, la liturgie et un art du cérémonial qui élève ; ses textes marquent encore les mouvements catholiques.</p>
+          </a>
+        
+          <a class="card-link" href="/Methode-AGSE.html" aria-label="La méthode AGSE">
+              <span class="badge">En savoir plus</span>
+            <div class="icon" aria-hidden="true">
+              <img src="/assets/route2.png" alt="Icône méthode AGSE">
+                </div>
+        <h3>Chanoine A.-L. Cornette (1860–1936)</h3>
+        <p>Premier aumônier SdF : diplomate, bâtisseur d’alliances ; obtient soutiens ecclésiaux et publics, sécurise la croissance du mouvement.</p>
+            </a>
+          </div>
+  
+    <div class="hero-grid2" 
+    <div>     
+          <a class="card-link" href="/Methode-AGSE.html" aria-label="La méthode AGSE">
+              <span class="badge">En savoir plus</span>
+            <div class="icon" aria-hidden="true">
+              <img src="/assets/route2.png" alt="Icône méthode AGSE">
+                </div>
+        <h3>Édouard de Macedo (1900–1965)</h3>
+        <p>Organisateur de premier plan (secrétariat général, commissariat) ; impulse la <em>Route</em> et les unités marines, donne des cadres durables à l’association naissante.</p>
+              
+       
+          <a class="card-link" href="/Methode-AGSE.html" aria-label="La méthode AGSE">
+              <span class="badge">En savoir plus</span>
+            <div class="icon" aria-hidden="true">
+              <img src="/assets/route2.png" alt="Icône méthode AGSE">
+                </div>
+        <h3>Guy de Larigaudie (1908–1940)</h3>
+        <p><em>« Routier de légende »</em>, écrivain et voyageur (Paris‑Saïgon 1937‑38). Son <em>Étoile au grand large</em> (publié après sa mort au combat en 1940) demeure un repère spirituel pour la <em>Route</em> : joie, pureté du regard, audace missionnaire.</p>
+
+    <div class="hero-grid2" 
+        <div></div>
+          <a class="card-link" href="/Methode-AGSE.html" aria-label="La méthode AGSE">
+              <span class="badge">En savoir plus</span>
+            <div class="icon" aria-hidden="true">
+              <img src="/assets/route2.png" alt="Icône méthode AGSE">
+                </div>
+        <h3>Michel Menu (1916–2015)</h3>
+        <p>Commissaire national éclaireurs SdF (1947–1956). Il relance l’exigence chez les 14‑17 ans en créant les <strong>Raiders scouts</strong> (1948‑55) : maîtrise technique, esprit de service et rayonnement. Il popularise les <em>patrouilles libres</em> et, plus tard, initie les <em>Goums</em> (raids spirituels).</p>
+
+        
+          <a class="card-link" href="/Methode-AGSE.html" aria-label="La méthode AGSE">
+              <span class="badge">En savoir plus</span>
+            <div class="icon" aria-hidden="true">
+              <img src="/assets/route2.png" alt="Icône méthode AGSE">
+                </div>
+        <h3>« Lézard » (Aimée Degallier‑Martin)</h3>
+        <p>Auteur du <em>Livre de Lézard</em>, manuel culte des cheftaines guides (Suisse). Son totem <em>Lézard</em> est passé dans le langage courant ; l’ouvrage a marqué la pédagogie féminine par sa finesse psychologique et sa clarté pratique.</p>
+      </a>        
+    </div>
+    <h2>4) Après‑guerre : essor, réformes et fidélités (1945–1965)</h2>
+    <p>Après 1945, le scoutisme connaît un <strong>essor massif</strong> en France. Les SdF multiplient les initiatives pédagogiques ; la proposition <strong>Raider</strong> de Michel Menu redonne souffle aux troupes. À partir de la fin des années 1950‑60, des <strong>réformes</strong> profondes (SdF : Pionniers/Rangers…) suscitent débats et réalignements. Une fraction de chefs et de troupes souhaite <em>maintenir intégralement</em> la méthode classique (patrouille, campisme, cérémonial) et un ancrage catholique explicite : c’est dans ce contexte que naît et se structure le courant <strong>Scouts d’Europe</strong>.</p>
+    <h2>5) Les Scouts d’Europe : de la FSE à l’UIGSE‑FSE (1956 →)</h2>
+    <p>Une origine à Cologne...
+  <ol class="timeline">
+    <li class="event">
+      <div class="year">1956</div>
+      <div class="rail-dot" aria-hidden="true"></div>
+      <div  class="content"> Fondation internationale à Cologne, de jeunes chefs européens créent la <strong>Fédération du Scoutisme Européen (FSE)</strong> : réconciliation des peuples par une pratique <em>fidèle à B‑P</em> et enracinée dans la foi chrétienne.</div>
+    </li>
+    <li class="event">
+      <div class="year">1962<br>>1965</div>
+      <div class="rail-dot" aria-hidden="true"></div>
+      <div class="content">Structuration liturgique et pédagogique, rédaction de la <em>Charte</em>. En <strong>1962</strong>, l’arrivée en France de <strong>Perig (Pierre) et Lizig Géraud‑Kéraod</strong> (issus du mouvement breton <em>Bleimor</em>) apporte effectifs, style et un <em>cérémonial</em> précis. En <strong>1965</strong>, les associations fédérées adoptent la <strong>Charte des principes naturels et chrétiens du scoutisme européen</strong>, texte de référence de l’Union. La FSE devient ensuite <strong>UIGSE‑FSE</strong>.
+    </li>
+    <li class="event">
+      <div class="year">2003</div>
+      <div class="rail-dot" aria-hidden="true"></div>
+      <div class="content">L’Union Internationale des Guides et Scouts d’Europe est reconnue par le Saint-Siège comme association privée internationale de fidèles de droit pontifical. La reconnaissance provisoire est confirmée en 2008 et désormais permanente. </div>
+    </li>
+    </ol>
+
+ 
+    <h2>6) L’AGSE en France : histoire et identité</h2>
+          <div class="hero-grid2"
+              <div>
+          <a class="aside" 
+              </div>
+        <h3>Repères historiques</h3>
+        <div class="timeline2"
+        <ul>
+          <li><strong>1958</strong> : premiers statuts des <em>Scouts d’Europe</em> en France.</li>
+          <li><strong>1960</strong> : essor nourri par l’arrivée des <em>Bleimor</em> (1962) et l’adhésion de troupes attachées à la méthode classique.</li>
+          <li><strong>1970</strong> : agrément « Jeunesse & éducation populaire » de l’État.</li>
+          <li><strong>1976</strong> : nom actuel : <strong>Association des Guides et Scouts d’Europe (AGSE)</strong>.</li>
+           </ul>
+        </div>      
+      </a>
+          <a class="aside" 
+              </div>
+        <h3>Identité pédagogique</h3>
+        <ul>
+          <li>Fidélité à la méthode de B‑P (patrouilles, campisme, progression) <em>enracinée</em> dans l’héritage du P. Sevin (promesse/loi, liturgie, accompagnement spirituel).</li>
+          <li>Unités <strong>non mixtes par branche</strong> ; complémentarité garçons/filles au service d’un même idéal.</li>
+          <li>Fraternité européenne (appartenance à l’UIGSE‑FSE), service de l’Église en France.</li>
+        </ul>          
+      </a>
+    </div>
+    
+    <h2>6) L’AGSE en France : histoire et identité</h2>
+          <div class="hero-grid"
+              <div>
+          <a class="aside" 
+              </div>
+        <h3>Branches d’âges</h3>
+        <table aria-label="Branches AGSE">
+          <thead><tr><th>Branche</th><th>Âges</th><th>Unités</th><th>Notes</th></tr></thead>
+          <tbody>
+            <tr><td><strong>Louvetisme</strong></td><td>8–12 ans</td><td>Meute (garçons) / Clairière (filles)</td><td>Imaginaire du <em>Livre de la Jungle</em>, pédagogie de la <em>meute</em>.</td></tr>
+            <tr><td><strong>Éclaireurs / Éclaireuses</strong></td><td>12–17 ans</td><td>Troupe / Compagnie</td><td>Système des patrouilles, technique, engagement et service.</td></tr>
+            <tr><td><strong>Route / Guides‑Aînées</strong></td><td>≥ 17 ans</td><td>Clan routier / Feu GA</td><td>Route, pèlerinage, projet personnel, service ecclésial et social.</td></tr>
+          </tbody>
+        </table>
+          <a class="aside" 
+              </div>
+        <h3>Échelons territoriaux</h3>
+        <ul>
+          <li><strong>Unité</strong> → <strong>Groupe</strong> (plusieurs unités locales, direction de groupe).</li>
+          <li><strong>District</strong> (regroupe des groupes d’un même bassin de vie).</li>
+          <li><strong>Province</strong> (plusieurs districts). <em>En France : 24 provinces</em>.</li>
+          <li><strong>Niveau national</strong> : équipes pédagogiques & techniques, centre national à <em>Château‑Landon</em>.</li>
+        </ul>        
+      </a>
+          <div class="hero-grid2"
+              <div>
+          <a class="aside" 
+              </div>
+        <h3>État des effectifs (indicateurs récents)</h3>
+        <p>À l’issue de l’exercice <strong>2023‑2024</strong>, l’AGSE fait état d’environ <strong>36 400 adhérents</strong> (dont ~27 500 jeunes) et évoque « <em>37 000 membres</em> » au fil du rapport d’activité. La dynamique est portée par la <em>branche rouge</em> (Route/GA) et par l’ouverture de <em>patrouilles libres</em> dans les zones moins dotées.</p>
+                 
+      </a>
+          <a class="aside" 
+              </div>
+        <h3>Spécificités & partenariats</h3>
+        <ul>
+          <li>Formation des chefs (camp‑écoles) dans la lignée de Gilwell/Chamarande.</li>
+          <li>Propositions marines et <em>patrouilles libres</em> (milieux ruraux, périphéries).</li>
+          <li>Coopérations fraternelles avec autres mouvements (SGDF, SUF…) et avec l’Église (CEF).</li>
+        </ul>
+                
+      </a>
+ </div>
+     <h2>8) Chronologie synthétique</h2>
+    <ul class="timeline2">
+      <li><strong>1907</strong> : Brownsea (camp expérimental) ; patrouilles, jeu, nature.</li>
+      <li><strong>1908</strong> : <em>Scouting for Boys</em> ; diffusion mondiale.</li>
+      <li><strong>1916</strong> : Wolf Cubs (louveteaux).</li>
+      <li><strong>1919</strong> : Gilwell Park & <em>Wood Badge</em>.</li>
+      <li><strong>1913–1922</strong> : P. Sevin rencontre B‑P, adapte la méthode, publie <em>Le Scoutisme</em>.</li>
+      <li><strong>1920</strong> : fondation des <em>Scouts de France</em> (Sevin, Cornette, de Macedo, Coze).</li>
+      <li><strong>1922–1951</strong> : Chamarande, centre SdF pour la formation des chefs.</li>
+      <li><strong>1937–1940</strong> : Guy de Larigaudie, figure de la Route ; mort au combat (1940).</li>
+      <li><strong>1947–1956</strong> : Michel Menu relance la branche éclaireurs ; <em>Raiders scouts</em>.</li>
+      <li><strong>1956</strong> : fondation de la FSE (Cologne).</li>
+      <li><strong>1958</strong> : premiers statuts des Scouts d’Europe en France (future AGSE).</li>
+      <li><strong>1962–1965</strong> : arrivée des Bleimor (Perig & Lizig Géraud‑Kéraod), <em>Charte</em> UIGSE‑FSE (1965).</li>
+      <li><strong>1970</strong> : agrément d’État (jeunesse & éducation populaire).</li>
+      <li><strong>1976</strong> : nom « Association des Guides et Scouts d’Europe ».</li>
+      <li><strong>2003</strong> : reconnaissance pontificale de l’UIGSE‑FSE.</li>
+      <li><strong>2024–2025</strong> : effectifs ~36–37 k en France ; 24 provinces ; développement des patrouilles libres.</li>
+    </ul>
+ 
+ 
+ 
+ 
+  </section>       
+
+  </main>
+
+
+  <footer>
+    © AGSE – Groupes de Port-Marly
+    <img src="./images/Logo_GS.png" alt="Logo AGSE" width="120" height="auto">
+  </footer>
+</body>
+</html>
