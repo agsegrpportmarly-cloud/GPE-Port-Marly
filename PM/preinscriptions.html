@@ -7,10 +7,6 @@
   <link href="https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet" />
   <link href="Style.css" rel="stylesheet">
   <style>
-    :root{--bleu:#005C84;--bleu2:#043956;--fond:#0b2940;--gris:#eef2f4;--blanc:#fff;--radius:18px;--shadow:0 14px 40px rgba(0,0,0,.22);--maxw:1200px;--gap:18px}
-    *{box-sizing:border-box}
-    html,body{margin:0;font-family:"Libre Baskerville",serif;background:var(--fond);color:#f6f9fc}
-    header img{width:100%;height:auto;display:block}
     .wrap{max-width:var(--maxw);margin:24px auto;padding:0 24px}
     .card{background:linear-gradient(180deg,#f3f7fa 0%, #e9f1f6 100%);color:#0f2332;border-radius:var(--radius);box-shadow:var(--shadow);padding:28px}
     h1{margin:0 0 10px;font-size:28px}.muted{opacity:.85;margin-top:0}
@@ -39,26 +35,78 @@
     .multiselect input{border:none;flex:1;min-width:100px;font-size:16px;outline:none}
     .options{position:absolute;top:100%;left:0;right:0;background:#fff;border:1px solid #ccc;border-radius:8px;margin-top:4px;max-height:200px;overflow-y:auto;display:none;z-index:10}
     .options div{padding:8px 12px;cursor:pointer}
-    .options div:hover{background:#005C84;color:#fff}
+    .options div:hover{background:#211E37;color:#fff}
     .show{display:block}
+    /* ===== Correctifs locaux pour la page Pré-inscription ===== */
+
+/* Au cas où les variables ne sont pas définies dans Style.css */
+:root { --bleu: #0C253C; --blanc: #ffffff; }
+
+/* Bouton "Envoyer" : toujours texte clair sur fond bleu */
+.btn,
+.btn:focus,
+.btn:active {
+  background: var(--bleu, #0C253C) !important;
+  color: var(--blanc, #ffffff) !important;
+  border: 1px solid var(--bleu, #0C253C) !important;
+  outline: none;
+}
+.btn:hover { filter: brightness(1.05); }
+
+/* <select> natifs : texte sombre + états visibles */
+select {
+  color: #0f2332 !important;
+  background: #ffffff !important;
+}
+select:focus { outline: 2px solid #0C253C; outline-offset: 1px; }
+
+/* Options dans la liste déroulante (Chrome/Firefox/Edge) */
+select option {
+  color: #0f2332 !important;
+  background: #ffffff !important;
+}
+select option:hover,
+select option:checked,
+select option:focus {
+  color: #0C253C !important;
+  background: #e6eef6 !important;
+}
+
+/* Multiselect custom : options et "tags" bien lisibles */
+.multiselect .tags { background: #ffffff; color: #0f2332; }
+.multiselect .tags input { color: #0f2332; }
+.options { background: #ffffff; }
+.options div { color: #0f2332; }
+.options div:hover,
+.options div:active {
+  background: #e6eef6;
+  color: #0C253C;
+}
+
+/* Accessibilité focus champs texte */
+input:focus, textarea:focus {
+  outline: 2px solid #0C253C;
+  outline-offset: 1px;
+}
+
+/* Par sécurité si un style global met tout en blanc */
+.card, form, label, input, select, textarea, .options div, .multiselect .tag, .btn {
+  color: #0f2332 !important;
+}
+.btn { color: var(--blanc, #ffffff) !important; } /* le bouton garde le texte blanc */
+
   </style>
 </head>
 <body>
   <header class="hero">
-    <br>
-    <br>
-    <br>
-    <br>    
-    <br>
-    <br>    
-    <br>
+
 <nav>
   <a href="/Index.html">Accueil</a>
-  <a href="/Activites.html">Nos unités</a>
+  <a href="/Activites.html">La pédagogie</a>
   <a href="/adherents/index.html">Espace adhérents</a>
   <a href="/preinscriptions.html">Pré-Inscriptions</a>
 </nav>
-  </header>
+</header>
 
   <div class="wrap">
     <div class="card">
